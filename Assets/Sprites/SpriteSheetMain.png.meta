@@ -1,0 +1,252 @@
+fileFormatVersion: 2
+guid: 53fd5a0423c85134db763c70afc13fd1
+timeCreated: 1509810476
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Left_UpperArm
+    21300002: Right_Upper_Arm
+    21300004: Ball_Center
+    21300006: Left_Center
+    21300008: Right_Center
+    21300010: Center
+    21300012: Left_Lower_Shield
+    21300014: SpriteSheetMain_7
+    21300016: SpriteSheetMain_8
+    21300018: SpriteSheetMain_9
+    21300020: Left_Feet
+    21300022: Right_Foot
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Left_UpperArm
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 421
+        width: 136
+        height: 569
+      alignment: 9
+      pivot: {x: 0.8825413, y: 0.1183646}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Upper_Arm
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 607
+        width: 113
+        height: 350
+      alignment: 9
+      pivot: {x: 0.6601406, y: 0.15747088}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ball_Center
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 623
+        width: 54
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Center
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 335
+        width: 77
+        height: 241
+      alignment: 9
+      pivot: {x: 0.76438767, y: 0.30289748}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Center
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 335
+        width: 76
+        height: 241
+      alignment: 9
+      pivot: {x: 0.2023705, y: 0.29351136}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Center
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 410
+        width: 28
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Lower_Shield
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 111
+        width: 69
+        height: 251
+      alignment: 9
+      pivot: {x: 0.7950415, y: 0.4459284}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheetMain_7
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 316
+        width: 60
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheetMain_8
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 262
+        width: 32
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheetMain_9
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 15
+        width: 32
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Feet
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 111
+        width: 72
+        height: 150
+      alignment: 9
+      pivot: {x: 0.81416446, y: 0.71111804}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Foot
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 108
+        width: 72
+        height: 152
+      alignment: 9
+      pivot: {x: 0.21725167, y: 0.6934587}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
