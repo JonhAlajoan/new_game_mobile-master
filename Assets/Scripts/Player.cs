@@ -18,8 +18,12 @@ public class Player : MonoBehaviour {
     Color colorStartShield = new Color(0.23529f, 1.00000f, 0.55686f);
     public event System.Action OnDeath;
     bool dead;
+    Vector3 originalCameraPosition;
+    float shakeAmt = 0;
+    public Camera mainCamera;
+
     void Start () {
-        
+
         duration = 1 * Time.deltaTime;
         //no actual color: 1 = vermelho, 0 = verde;
         actualColor = 0;
@@ -70,7 +74,7 @@ public class Player : MonoBehaviour {
             actualColor = 1;
         }        
     }
-
+   
     public void takeDamage(int damage)
     {
         health -= damage;

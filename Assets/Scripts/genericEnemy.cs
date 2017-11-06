@@ -16,9 +16,11 @@ public class genericEnemy : MonoBehaviour
     protected bool dead;
     public float startingHealth;
     public event System.Action OnDeath;
+    float countTimeChange;
 
     public void Start()
     {
+        countTimeChange = 1 * Time.deltaTime;
         health = startingHealth;
     }
 
@@ -53,12 +55,21 @@ public class genericEnemy : MonoBehaviour
         health = startingHealth;
     }
 
-    void Attack()
+    void Attack(string colorAttack)
     {
         if (Time.time > nextShotTime)
         {
-            nextShotTime = Time.time + msBetweenShots / 1000;
-            GameObject projectile = TrashMan.spawn("Bullet_Projectile", Muzzles.transform.position, Muzzles.transform.rotation);
+            if(colorAttack == "red")
+            {
+                nextShotTime = Time.time + msBetweenShots / 1000;
+                GameObject projectileRed = TrashMan.spawn("Bullet_Projectile_Red", Muzzles.transform.position, Muzzles.transform.rotation);
+            }
+
+            if (colorAttack == "green")
+            {
+                nextShotTime = Time.time + msBetweenShots / 1000;
+                GameObject projectile = TrashMan.spawn("Bullet_Projectile", Muzzles.transform.position, Muzzles.transform.rotation);
+            }            
         }
     }
 
@@ -66,9 +77,15 @@ public class genericEnemy : MonoBehaviour
     {
         if (Time.time > nextAttackTime)
         {
+            countTimeChange += 1;
             nextAttackTime = Time.time + timeBetweenAttacks;
+            if (countTimeChange > 3)
+            {
+                Attack("red");
+                countTimeChange = 0;
+            }
             //auxSfxController.PlaySFXSounds("Lotus_Projectile");
-            Attack();
+            Attack("green");
         }
     }
 }

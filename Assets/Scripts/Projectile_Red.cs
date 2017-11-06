@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Projectile_Red : MonoBehaviour {
 
-    float speed = 5f;
+    float speed = 6f;
     int damage = 1;
     public Transform Hit_vfx;
     float lifetime;
@@ -12,9 +12,11 @@ public class Projectile_Red : MonoBehaviour {
     GameObject target;
     Player damageableObject;
     float count;
+    CameraShake cam;
+
     void Start()
     {
-        count = 1;
+         count = 1;
     }
 
 
@@ -25,8 +27,22 @@ public class Projectile_Red : MonoBehaviour {
 
     void Update()
     {
+        GameObject camSearch = GameObject.FindGameObjectWithTag("MainCamera");
+        cam = camSearch.GetComponent<CameraShake>();
 
-        target = GameObject.FindGameObjectWithTag("Player");
+        float moveDistance = speed * Time.deltaTime;
+        transform.Translate(Vector2.down * moveDistance);
+
+        if (GameObject.FindGameObjectWithTag("green"))
+        {
+            target = GameObject.FindGameObjectWithTag("green");
+        }
+
+        if (GameObject.FindGameObjectWithTag("red"))
+        {
+            target = GameObject.FindGameObjectWithTag("red");
+        }
+
         damageableObject = target.GetComponent<Player>();
         lifetime += 1 * Time.deltaTime;
 
@@ -35,17 +51,21 @@ public class Projectile_Red : MonoBehaviour {
             TrashMan.despawn(gameObject);
             lifetime = 0;
         }
-        float moveDistance = speed * Time.deltaTime;
-        transform.Translate(Vector2.left * moveDistance);
+
     }
 
     void OnTriggerEnter2D(Collider2D c)
     {
-        Debug.Log("tocou");
-        if (damageableObject != null)
+
+        if (damageableObject != null && damageableObject.tag == "green")
         {
-            TrashMan.spawn("Hit", gameObject.transform.position, gameObject.transform.rotation);
+            TrashMan.spawn("Hit_Red", gameObject.transform.position, gameObject.transform.rotation);
+            cam.Shake(0.5f,0.3f);
             damageableObject.takeDamage(damage);
+        }
+        else
+        {
+            TrashMan.spawn("Hit_Absorbed_Red", target.transform.position, target.transform.rotation);
         }
         TrashMan.despawn(gameObject);
     }
