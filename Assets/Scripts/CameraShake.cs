@@ -32,6 +32,7 @@ public class CameraShake : MonoBehaviour {
         while (elapsedTime < duration)
         {
             //Parte Que faz a aberração cromática ficar louca;
+            
             var chromAberration = ppProfile.chromaticAberration.settings;
             chromAberration.intensity = 3f;
             ppProfile.chromaticAberration.settings = chromAberration;
@@ -55,7 +56,7 @@ public class CameraShake : MonoBehaviour {
             
         }
         var chromaAberration = ppProfile.chromaticAberration.settings;
-        chromaAberration.intensity = 1f;
+        chromaAberration.intensity = 0.5f;
         ppProfile.chromaticAberration.settings = chromaAberration;
         thisCamera.transform.position = cameraOrigin;
     }
