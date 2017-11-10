@@ -13,13 +13,13 @@ public class CameraShake : MonoBehaviour {
         thisCamera = gameObject.GetComponent<Camera>();
     }
 
-    public void Shake(float amplitude, float duration, float dampStartPercentage = 0.75f)
+    public void Shake(float amplitude, float duration, float intensityChromaticAberration, float dampStartPercentage = 0.75f)
     {
         StopAllCoroutines();
-        StartCoroutine(ShakeCamera(amplitude, duration, dampStartPercentage));
+        StartCoroutine(ShakeCamera(amplitude, duration,intensityChromaticAberration, dampStartPercentage));
     }
 
-    private IEnumerator ShakeCamera(float amplitude, float duration, float dampStartPercentage)
+    private IEnumerator ShakeCamera(float amplitude, float duration,float intensityChromaticAberration, float dampStartPercentage)
     {
         //ensure percentage is in a valid range
         dampStartPercentage = Mathf.Clamp(dampStartPercentage, 0.0f, 1.0f);
@@ -34,7 +34,7 @@ public class CameraShake : MonoBehaviour {
             //Parte Que faz a aberração cromática ficar louca;
             
             var chromAberration = ppProfile.chromaticAberration.settings;
-            chromAberration.intensity = 3f;
+            chromAberration.intensity = intensityChromaticAberration;
             ppProfile.chromaticAberration.settings = chromAberration;
 
             elapsedTime += Time.deltaTime;
@@ -56,7 +56,7 @@ public class CameraShake : MonoBehaviour {
             
         }
         var chromaAberration = ppProfile.chromaticAberration.settings;
-        chromaAberration.intensity = 0.5f;
+        chromaAberration.intensity = 0.8f;
         ppProfile.chromaticAberration.settings = chromaAberration;
         thisCamera.transform.position = cameraOrigin;
     }

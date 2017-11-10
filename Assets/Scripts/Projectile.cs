@@ -14,13 +14,10 @@ public class Projectile : MonoBehaviour {
      */
 
     float speed = 5f;
-    float lifetime;
-
+  
     int damage = 1;
     
     GameObject target;
-
-    Player damageableObject;
 
     CameraShake cam;
 
@@ -29,7 +26,10 @@ public class Projectile : MonoBehaviour {
     {
         speed = newSpeed;
     }
-
+    public void SetDamage(int damageUpdate)
+    {
+        damage = damageUpdate;
+    }
     void Update()
     {
         //Parte que procura a câmera e pega o componente script CameraShake
@@ -40,50 +40,28 @@ public class Projectile : MonoBehaviour {
         float moveDistance = speed * Time.deltaTime;
         transform.Translate(Vector2.down * moveDistance);
 
-        /* Os dois ifs procuram pelo player todo update baseado na tag atual green ou red, pra indicar se o shield no momento está verde ou vermelho
-         * e o assimila para a variável target, a fim de que o player possa estar sempre na mira das balas.
-         */
-        if (GameObject.FindGameObjectWithTag("green"))
-        {
-            target = GameObject.FindGameObjectWithTag("green");
-        }
-        if (GameObject.FindGameObjectWithTag("red"))
-        {
-            target = GameObject.FindGameObjectWithTag("red");
-        }
-
-        //Não sei o que isso faz mas vou deixar por precaução
-        damageableObject = target.GetComponent<Player>();
-
-        //Setando o lifetime para ser 1 unidade de tempo por segundo
-        lifetime += 1 * Time.deltaTime;
-        
-        //Mini função para despawnar a bala sem necessitar de uma corotina.
-        if (lifetime > 3)
-        {
-            TrashMan.despawn(gameObject);
-            lifetime = 0;
-        }
-        
     }
     
     //Função para a colisão da bala com o player
     void OnTriggerEnter2D(Collider2D c)
     {
+        Player damageableObject = c.GetComponent<Player>();
         //Se a tag do inimigo estiver como vermelha e como este projétil é o verde, então o dano deve ser causado. Função CamShake utilizada pra sacudir a tela 
         if (damageableObject != null && damageableObject.tag == "red")
         {
             TrashMan.spawn("Hit", gameObject.transform.position, gameObject.transform.rotation);
-            cam.Shake(0.5f, 0.3f);
+            cam.Shake(0.5f, 0.3f,3f);
             damageableObject.takeDamage(damage);
+            TrashMan.despawn(gameObject);
         }
 
         //Se a tag for verde, então spawnar o efeito visual de absorção e despawnar a bala.
-        else
+        if (damageableObject != null && damageableObject.tag == "green")
         {
-            TrashMan.spawn("Hit_Absorbed_Green", target.transform.position, target.transform.rotation);
+            TrashMan.spawn("Hit_Absorbed_Green", damageableObject.transform.position, damageableObject.transform.rotation);
+            TrashMan.despawn(gameObject);
         }
-        TrashMan.despawn(gameObject); 
+        
     }
 
 }

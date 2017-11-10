@@ -21,7 +21,7 @@ public class Player : MonoBehaviour {
      */
     int health;
     int actualColor;
-
+    public Transform[] muzzleShoot;
     public Transform shieldMuzzle;
     public GameObject shield;    
 
@@ -34,12 +34,16 @@ public class Player : MonoBehaviour {
     Color colorStartShield = new Color(0.23529f, 1.00000f, 0.55686f);
 
     public event System.Action OnDeath;
+    public int numberProjectiles;
+ 
+    public float count;
 
     bool dead;
 
+
     void Start () {
 
-       
+        count = 1 * Time.deltaTime;
         //actual color: 1 = vermelho, 0 = verde;
         actualColor = 0;
         health = 3;
@@ -158,9 +162,37 @@ public class Player : MonoBehaviour {
         health = 3;
     }
 
+
+    /*----------------------------------------Attack function---------------------------------------------
+     * typeAttack will be explained if any especial projectiles are being used in future
+     * 1 - Normal projectile
+     */
+    void Attack(string typeAttack,int numProjectiles)
+    {
+        numProjectiles = numberProjectiles;
+        Debug.Log("fun~çao chamaa");
+            for (int i = 0; i < numProjectiles / 4; i++)
+            {
+            Debug.Log("Entrada:" + i + "no for I");
+                for (int j = 0; j < 4; j++)
+                {
+                Debug.Log("Entrada:" + j + "no for j");
+                TrashMan.spawn(typeAttack, muzzleShoot[j].transform.position, muzzleShoot[j].transform.rotation);
+                }
+                
+            }       
+    }
+
     void Update()
     {
+        count += 1 * Time.deltaTime;
 
+        if (count > 5)
+        {
+            Attack("Projectile_Player", 4);
+            count = 0;
+        }
+       
         if (Input.GetMouseButtonDown(0))
         {
             changeColorPlayer(actualColor);

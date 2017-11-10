@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 95317701797771140}
   m_Layer: 0
   m_Name: Enemy1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +94,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1749251966460250
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -131,6 +131,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4399496795393088}
+  - {fileID: 4564819491425696}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -160,7 +161,6 @@ Transform:
   - {fileID: 4750841967714236}
   - {fileID: 4147905547846286}
   - {fileID: 4273967727577546}
-  - {fileID: 4564819491425696}
   m_Father: {fileID: 4215694592960546}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -174,8 +174,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 2.0100002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4399496795393088}
-  m_RootOrder: 3
+  m_Father: {fileID: 4215694592960546}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4750841967714236
 Transform:
@@ -235,13 +235,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7782f5aad611e488045d9c444212f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingHealth: 3
+  auxHealth: 0
   Muzzles: {fileID: 4564819491425696}
-  msBetweenShots: 100
+  msBetweenShots: 0
   nextShotTime: 0
-  timeBetweenAttacks: 1
+  timeBetweenAttacks: 0
   nextAttackTime: 0
-  health: 3
-  startingHealth: 0
 --- !u!212 &212484745917667728
 SpriteRenderer:
   m_ObjectHideFlags: 1
