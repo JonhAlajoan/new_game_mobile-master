@@ -1,0 +1,196 @@
+fileFormatVersion: 2
+guid: d00646e11f0722e41ae9859de0b97c2d
+timeCreated: 1510415998
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Top_Bombardier
+    21300002: Left_Arm_Bombardier
+    21300004: Left_Center_Bombardier
+    21300006: SphereCenter_Bombardier
+    21300008: Right_Center_Bombardier
+    21300010: Right_Arm_Bombardier
+    21300012: Left_Foot_Bombardier
+    21300014: Right_Foot_Bombardier
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Top_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 606
+        width: 178
+        height: 399
+      alignment: 9
+      pivot: {x: 0.686442, y: 0.0885048}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Arm_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 298
+        width: 80
+        height: 271
+      alignment: 9
+      pivot: {x: 0.80566674, y: 0.14551073}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Center_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 155
+        width: 123
+        height: 270
+      alignment: 9
+      pivot: {x: 0.79409343, y: 0.68333536}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SphereCenter_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 424
+        width: 85
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Center_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 608
+        y: 167
+        width: 128
+        height: 268
+      alignment: 9
+      pivot: {x: 0.14302492, y: 0.6491836}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Arm_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 823
+        y: 254
+        width: 90
+        height: 251
+      alignment: 9
+      pivot: {x: 0.19840156, y: 0.8694873}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Foot_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 15
+        width: 118
+        height: 222
+      alignment: 9
+      pivot: {x: 0.822689, y: 0.4142403}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Foot_Bombardier
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 21
+        width: 119
+        height: 222
+      alignment: 9
+      pivot: {x: 0.17685936, y: 0.39810878}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -7,7 +7,6 @@ public class genericEnemy : LivingEntity
 
     public Transform Muzzles;
     public static int quantityMuzzlesUsed;
-    public float msBetweenShots;
     public float nextShotTime;
     public float timeBetweenAttacks = 0.1f;
     public float nextAttackTime;

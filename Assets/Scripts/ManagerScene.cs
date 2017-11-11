@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class ManagerScene : MonoBehaviour {
 
-	// Use this for initialization
+    public int numProjectiles;
+    public int typeOfSpaceshipBeingUsed;
+    public int delayBetweenAttacks;
+
 	void Start () {
 		
 	}

@@ -1,0 +1,224 @@
+fileFormatVersion: 2
+guid: fdb04d384a08046418e7f4b7d61c4c6c
+timeCreated: 1510416151
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Left_Upper_Frozen
+    21300002: Upper_Frozen
+    21300004: right_Upper_Frozen
+    21300006: Left_Arm_Frozen
+    21300008: SpriteSheetFrozen_4
+    21300010: Sphere_Center_Frozen
+    21300012: Right_Arm_Froze
+    21300014: Left_Lower_Frozen
+    21300016: Lower_FRozen
+    21300018: Right_Lower_Frozen
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Left_Upper_Frozen
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 563
+        width: 80
+        height: 158
+      alignment: 9
+      pivot: {x: 0.5928036, y: 0.037939917}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Upper_Frozen
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 663
+        width: 130
+        height: 291
+      alignment: 9
+      pivot: {x: 0.4885059, y: 0.19190879}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: right_Upper_Frozen
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 558
+        width: 83
+        height: 159
+      alignment: 9
+      pivot: {x: 0.4552752, y: 0.033063397}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Arm_Frozen
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 461
+        width: 123
+        height: 78
+      alignment: 9
+      pivot: {x: 0.8765978, y: 0.53831404}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheetFrozen_4
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 538
+        width: 26
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Sphere_Center_Frozen
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 471
+        width: 95
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Arm_Froze
+      rect:
+        serializedVersion: 2
+        x: 605
+        y: 464
+        width: 120
+        height: 81
+      alignment: 9
+      pivot: {x: 0.13889161, y: 0.5553427}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Left_Lower_Frozen
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 323
+        width: 82
+        height: 134
+      alignment: 9
+      pivot: {x: 0.90089417, y: 0.7899277}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Lower_FRozen
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 100
+        width: 131
+        height: 291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Right_Lower_Frozen
+      rect:
+        serializedVersion: 2
+        x: 557
+        y: 321
+        width: 84
+        height: 136
+      alignment: 9
+      pivot: {x: 0.16201709, y: 0.7307288}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

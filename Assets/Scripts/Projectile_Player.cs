@@ -72,12 +72,12 @@ public class Projectile_Player : MonoBehaviour {
         //Se a tag do inimigo estiver como vermelha e como este projétil é o verde, então o dano deve ser causado. Função CamShake utilizada pra sacudir a tela 
         if (damageableObject != null && damageableObject.tag == "Enemy")
         {
-            TrashMan.spawn("Hit_Enemy", gameObject.transform.position, gameObject.transform.rotation);
+            //TrashMan.spawn("Hit_Enemy", gameObject.transform.position, gameObject.transform.rotation);
             Debug.Log("Camshake ativado");
             cam.Shake(0.1f, 0.1f,1.2f);
             Debug.Log("dano tomado");
             damageableObject.TakeDamage(damage);
-            speed = 2f;
+            speed = 0.5f;
             count = 0;
             TrashMan.despawn(gameObject);
             

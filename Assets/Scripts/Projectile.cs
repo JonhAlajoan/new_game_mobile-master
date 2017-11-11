@@ -46,6 +46,7 @@ public class Projectile : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D c)
     {
         Player damageableObject = c.GetComponent<Player>();
+
         //Se a tag do inimigo estiver como vermelha e como este projétil é o verde, então o dano deve ser causado. Função CamShake utilizada pra sacudir a tela 
         if (damageableObject != null && damageableObject.tag == "red")
         {

@@ -10,13 +10,23 @@ public class LivingEntity : MonoBehaviour {
    
     public event System.Action OnDeath;
     public float auxHealth;
-
+    public float msBetweenShots;
+    GameObject player;
+    Player target;
+    bool resetTheMSBetweenAttacks;
     protected virtual void Start()
     {
+        player = GameObject.FindGameObjectWithTag("green");
+        target = player.GetComponent<Player>();
+
         health = startingHealth;
-        auxHealth = health;
-        Debug.Log(startingHealth);
+        auxHealth = health;   
         //spawnControlAux = spawnControl.GetComponent<Spawner> ().enemiesRemainingAlive;
+    }
+
+    public void SetMsBetweenAttacks(float msBetweenAttack)
+    {
+        msBetweenShots = msBetweenAttack;
     }
 
     public void TakeDamage(float damage)
@@ -44,7 +54,9 @@ public class LivingEntity : MonoBehaviour {
         {
             OnDeath();
         }
-        GameObject.Destroy(gameObject);
+        TrashMan.despawn(gameObject);
+        dead = false;
+        health = startingHealth;
     }
 }
 

@@ -20,9 +20,6 @@ public class Projectile_Red : MonoBehaviour {
     int damage = 1;
 
     GameObject target;
-
-
-
     CameraShake cam;
 
     public void Start()
@@ -51,9 +48,11 @@ public class Projectile_Red : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D c)
     {
         Player damageableObject = c.GetComponent<Player>();
+        
         //Se a tag do inimigo estiver como verde e como este projétil é o vermelho, então o dano deve ser causado. Função CamShake utilizada pra sacudir a tela 
         if (damageableObject != null && damageableObject.tag == "green")
         {
+            
             TrashMan.spawn("Hit_Red", gameObject.transform.position, gameObject.transform.rotation);
             cam.Shake(0.5f,0.3f,3f);
             damageableObject.takeDamage(damage);
