@@ -8,6 +8,7 @@ TagManager:
   - green
   - red
   - Enemy
+  - SceneManager
   layers:
   - Default
   - TransparentFX

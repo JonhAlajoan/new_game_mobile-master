@@ -7,6 +7,7 @@ public class ManagerScene : MonoBehaviour {
     public int numProjectiles;
     public int typeOfSpaceshipBeingUsed;
     public int delayBetweenAttacks;
+    public float score;
 
 	void Start () {
 		

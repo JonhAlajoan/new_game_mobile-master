@@ -10,8 +10,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: Block Breaker
+  companyName: Jonathan_Rocha
+  productName: Akajudan
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21176471, a: 1}
@@ -137,7 +137,7 @@ PlayerSettings:
   protectGraphicsMemory: 0
   useHDRDisplay: 0
   applicationIdentifier:
-    Android: com.Company.ProductName
+    Android: com.Jonathan_Rocha.Akajudan
     Standalone: unity.DefaultCompany.Block Breaker
     Tizen: com.Company.ProductName
     iOS: com.Company.ProductName
@@ -521,7 +521,8 @@ PlayerSettings:
   incrementalIl2cppBuild:
     iOS: 0
   additionalIl2CppArgs: 
-  apiCompatibilityLevelPerPlatform: {}
+  apiCompatibilityLevelPerPlatform:
+    Android: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Block Breaker
@@ -601,11 +602,12 @@ PlayerSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    UNet: 1
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 2
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: d958f617-2494-489c-8b1d-d08b01bfb025
+  projectName: Block Breaker
+  organizationId: jonathan-alajoan
   cloudEnabled: 0
   enableNewInputSystem: 0

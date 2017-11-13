@@ -51,6 +51,7 @@ public class Player : MonoBehaviour {
     public ManagerScene managerGetVariables;
     GameObject enemy;
     LivingEntity target;
+    GameObject managerObject;
     public bool canRemoveMore = true;
     public bool canReviveMore;
     public bool canRegenerate;
@@ -80,10 +81,13 @@ public class Player : MonoBehaviour {
         newShield = TrashMan.spawn("Shield_UP", shieldMuzzle.position, shieldMuzzle.rotation);
         shield = newShield;
 
+        managerObject = GameObject.FindGameObjectWithTag("SceneManager");
+        managerGetVariables = managerObject.GetComponent<ManagerScene>();
+
         spaceshipUsed = managerGetVariables.GetComponent<ManagerScene>().typeOfSpaceshipBeingUsed;
         numberProjectiles = managerGetVariables.GetComponent<ManagerScene>().numProjectiles;
         delayBetweenAttack = managerGetVariables.GetComponent<ManagerScene>().delayBetweenAttacks;
-        enemy = GameObject.FindGameObjectWithTag("Enemy");
+        
 
         if (spaceshipUsed == 7)
         {
@@ -221,6 +225,7 @@ public class Player : MonoBehaviour {
         {
             //case 1: Default spaceship the one without any kind of buffs
             case 1:
+                
                 if (timeBetweenAttacks > delayBetweenAttack)
                 {
                     count += 1 * Time.deltaTime;
@@ -270,6 +275,8 @@ public class Player : MonoBehaviour {
 
             //case 3: The bombardier spaceship: It does spawn a set of bombs that triples the damage instead of normal projectiles but will only spawn 1/4 of the projectiles
             case 3:
+                int newDelay = delayBetweenAttack + 3;
+                if (timeBetweenAttacks > newDelay)
                 {
                     count += 1 * Time.deltaTime;
                     /*GameObject chargeAttack =*/
@@ -282,14 +289,17 @@ public class Player : MonoBehaviour {
                     //ParticleSystem particleChargeAttack = chargeAttack.GetComponent<ParticleSystem>();
                     if (count > 2)
                     {
+                        int numBombs = numberProjectiles / 2;
+
                         TrashMan.spawn("Instantiated_Bullet", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
-                        if (numberProjectiles < 4)
+                        if (numberProjectiles <= 4)
                         {
-                            Attack("Projectile_Player", 1);
+                            Attack("Bomb_Bombardier", 1);
                         }
-                        else
+
+                        if(numberProjectiles>4)
                         {
-                            Attack("Projectile_Player", numberProjectiles/4);
+                            Attack("Bomb_Bombardier", numBombs);
                         }
                         
                         count = 0;
@@ -479,6 +489,10 @@ public class Player : MonoBehaviour {
 
     void Update()
     {
+        enemy = GameObject.FindWithTag("Enemy");
+        managerObject = GameObject.FindGameObjectWithTag("SceneManager");
+        managerGetVariables = managerObject.GetComponent<ManagerScene>();
+
         //switch who'll choose which type of attack will be used based on the number of the spaceship
         target = enemy.GetComponent<LivingEntity>();
         if (spaceshipUsed == 5 && canRegenerate == false)
