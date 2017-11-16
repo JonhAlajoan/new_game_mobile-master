@@ -27,6 +27,7 @@ public class Player : MonoBehaviour {
     public Transform[] muzzleShoot;
     public Transform shieldMuzzle;
     public GameObject shield;
+    GameObject sceneManager;
 
     public SpriteRenderer[] modifiableColor;
 
@@ -55,6 +56,10 @@ public class Player : MonoBehaviour {
     public bool canRemoveMore = true;
     public bool canReviveMore;
     public bool canRegenerate;
+
+
+   
+
     #endregion
 
     void Start () {
@@ -213,6 +218,10 @@ public class Player : MonoBehaviour {
             OnDeath();
         }
         //TrashMan.spawn ("FireDestruct", gameObject.transform.position, gameObject.transform.rotation * flipSpawn);
+        sceneManager = GameObject.FindGameObjectWithTag("SceneManager");
+        ManagerScene manageSceneVariableChanger = sceneManager.GetComponent<ManagerScene>();
+        manageSceneVariableChanger.isPlayerAlive = false;
+
         TrashMan.despawn(gameObject);
         dead = false;
         health = 3;
@@ -326,7 +335,7 @@ public class Player : MonoBehaviour {
                 {
                     msBetweenAttacksEnemy = msBetweenAttacksEnemy + 100;
                     canRemoveMore = false;
-                    countRemoveMoreMSBetweenShots = 10;
+                    countRemoveMoreMSBetweenShots = 5;
                 } 
                 
                 target.SetMsBetweenAttacks(msBetweenAttacksEnemy);
@@ -407,7 +416,7 @@ public class Player : MonoBehaviour {
             case 6:
 
                 float doubleTimeAttack = delayBetweenAttack * 2;
-
+                int numProj = numberProjectiles / 2;
                 if (timeBetweenAttacks > doubleTimeAttack)
                 {
                     count += 1 * Time.deltaTime;
@@ -422,7 +431,7 @@ public class Player : MonoBehaviour {
                     if (count > 2)
                     {
                         TrashMan.spawn("Instantiated_Bullet", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
-                        Attack("Projectile_Player", numberProjectiles);
+                        Attack("Projectile_Player", numProj);
                         count = 0;
                         timeBetweenAttacks = 0;
                         canSpawnChargeAttack = true;

@@ -19,6 +19,9 @@ public class Projectile : MonoBehaviour {
     
     GameObject target;
 
+    GameObject managerScene;
+    ManagerScene sceneManagerUpdated;
+
     CameraShake cam;
 
     //Função para modificar a velocidade da bala em runtime caso necessário
@@ -30,11 +33,20 @@ public class Projectile : MonoBehaviour {
     {
         damage = damageUpdate;
     }
+
+    public void updateScore()
+    {
+        sceneManagerUpdated.score += 1;
+    }
+
     void Update()
     {
         //Parte que procura a câmera e pega o componente script CameraShake
         GameObject camSearch = GameObject.FindGameObjectWithTag("MainCamera");
         cam = camSearch.GetComponent<CameraShake>();
+
+        managerScene = GameObject.FindGameObjectWithTag("SceneManager");
+        sceneManagerUpdated = managerScene.GetComponent<ManagerScene>();
 
         //Movimentação do projétil
         float moveDistance = speed * Time.deltaTime;
@@ -60,6 +72,7 @@ public class Projectile : MonoBehaviour {
         if (damageableObject != null && damageableObject.tag == "green")
         {
             TrashMan.spawn("Hit_Absorbed_Green", damageableObject.transform.position, damageableObject.transform.rotation);
+            updateScore();
             TrashMan.despawn(gameObject);
         }
         
