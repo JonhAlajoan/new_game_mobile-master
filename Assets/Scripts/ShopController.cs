@@ -6,18 +6,40 @@ using UnityEngine.EventSystems;
 using BayatGames.SaveGameFree;
 using System.Net;
 using System;
+using UnityEngine.Advertisements;
+using UnityEngine.SceneManagement;
 
+/* ------------------------------------------------Class that controls the entirety of the shop--------------------------
+ * 
+ */
 public class ShopController : MonoBehaviour {
 
-#region attributes
+    #region attributes
+
+    /*Attributes:
+     * Maincam = Main camera, used to lerp between ships and tilt to left while seeing the details
+     * shipPositions = Array that stores each Transform of the ships on the Shop(0 - default, 1 - kaze, 2 - Berserk, 3 - Frozen, 4 - hira, 5 - doublegold, 6 - bombardier)
+     * initialTarget = The initial target of the shop (The default ship)
+     * NextTarget = Variable that stores the incoming ship that the camera must move to show
+     * TimeToCompleteTravel = Time that the camera will waste the travel until the end is reached
+     * Index = Value to indicate and iterate where the ship is positioned in the array shipPositions
+     * nameOfShipStart = Name of the ship that is show at first in the shop
+     * nameOfShipDetails = Name that is shown at the details from shop
+     * CanvasPopUPBuy = canvas that is shown when you click to buy a ship
+     * CanvasPopUpBuyConfirmation = Canvas that show the price and confirms if you want to buy the ship
+     * isSpaceshipOwned = List of ships that are owned by the player. The ships are identified using the index.
+     * buff and debuffDeatails = Buffs or debuffs that are shown  in the details page
+     * scoreShop = variable that represents the amount of gold that the player does have right now and the variable that is saved in persistent datapath
+     * startOnLoad = Defines if the data should be loaded when the script is initialized
+     * numProjectilesToBeUpgradedOnShop = variable that stores the amount of projectiles that a player does have after the upgrade and its valued is save on persistent data;
+     * sapaceShipToBeUsedOnStart = variable that stores spaceship that'll be used when start game is pressed;
+     * delayBetweenAttacksToBeUpgraded = Variable that stores the delay between attacks that a player upgraded and its value is saved on persistent datapath;
+     * 
+     */
     Transform mainCam;
     public Transform[] shipPositions;
     Transform initialTarget;
-    Transform nextTarget;
-
-    float timeToCompleteTravel;
-    
-    public int index;
+    Transform nextTarget;    
 
     public Text nameOfShipStart;
     public Text nameOfShipDetails;
@@ -28,16 +50,27 @@ public class ShopController : MonoBehaviour {
     public GameObject canvasPopUPBuyConfirmation;
     public GameObject canvasPopUpWatchAd;
     public GameObject canvasShipAlreadyOwned;
-
-    List<Player> shipsOwnedByPlayer = new List<Player>();
+    public GameObject canvasUpgrade;
+    public GameObject canvasUpgradeBuyPopUpProjectile;
+    public GameObject canvasUpgradeWatchAd;
+    public GameObject canvasWatchADWarn;
+    public GameObject canvasUpgradeBuyPopUpDelay;
+    public GameObject canvasProjectileSuccessfullyBought;
+    public GameObject canvasDelaySuccessfullyBought;
+    public GameObject canvasWatchADWarnShipShop;
 
     public Text buffDetails;
     public Text debuffDetails;
 
     public Text initialPoints;
     public Text initialPointDetails;
+    public Text initialPointsUpgrade;
 
     public Text priceOfItens;
+    public Text textPriceOfUpgradeProjectile;
+    public Text textPriceOfUpgradeDelay;
+
+    public Button buttonStartGame;
 
     public int scoreShop;
 
@@ -46,10 +79,19 @@ public class ShopController : MonoBehaviour {
     float valueToTilt;
 
     public int numProjectilesToBeUpgradedOnShop;
-    public int sapaceShipToBeUsedOnStart;
+    public int spaceShipToBeUsedOnStart;
     public int delayBetweenAttacksToBeUpgraded;
     public List<int> isSpaceshipOwned = new List<int>();
     public int priceOfShip;
+    public int priceOfUpgradeDelay;
+    public int priceOfUpgradeNumProjectiles;
+    public int index;
+    float timeToCompleteTravel;
+
+
+
+
+
     #endregion /attributes
 
     private void Start()
@@ -57,8 +99,10 @@ public class ShopController : MonoBehaviour {
         index = 0;
         nameOfShipStart.text = "Verstek";
         timeToCompleteTravel = 5f;
-
-        if(startOnLoad)
+        isSpaceshipOwned.Add(index);
+        priceOfUpgradeNumProjectiles = 500;
+        priceOfUpgradeDelay = 200;
+        if (startOnLoad)
         {
            Load();
         }
@@ -67,7 +111,8 @@ public class ShopController : MonoBehaviour {
     }
 
     #region selectionOfShips
-    
+
+    ///The two first functions, selectShipPositively and selectShipNegatively is utilized to call the coroutines that moves the camera to left or right
 
     public void selectShipPositively()
     {
@@ -79,6 +124,7 @@ public class ShopController : MonoBehaviour {
         StartCoroutine("ControlCameraBetweenShipsNegative");
     }
     
+    // This function utilizes the index to find the ship that the camera is pointing and modify the text from start and details to show the ship correct name 
     public void setNameOfShip()
     {
         Text nameOfShip = nameOfShipStart.GetComponent<Text>();
@@ -116,6 +162,7 @@ public class ShopController : MonoBehaviour {
         }
     }
 
+    // This coroutine utilizes the coroutine to find the ship and modify the nextTarget to the transform stored onto the shipPositionsArray at given index + 1
     IEnumerator ControlCameraBetweenShipsPositive ()
     {
         switch (index)
@@ -150,9 +197,9 @@ public class ShopController : MonoBehaviour {
                 break;
         }
 
+        //While so the lerp and moveTowards can be used correctly
         while (Vector2.Distance(mainCam.position, nextTarget.position) > 0.001f)
         {
-
             mainCam.transform.position = Vector3.MoveTowards(mainCam.transform.position, nextTarget.transform.position, timeToCompleteTravel * Time.deltaTime);
             mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, nextTarget.transform.position, timeToCompleteTravel * Time.deltaTime);
             setNameOfShip();
@@ -162,6 +209,7 @@ public class ShopController : MonoBehaviour {
         yield break;
     }
 
+    // This coroutine utilizes the coroutine to find the ship and modify the nextTarget to the transform stored onto the shipPositionsArray at given index - 1
     IEnumerator ControlCameraBetweenShipsNegative()
     {
         switch (index)
@@ -221,6 +269,7 @@ public class ShopController : MonoBehaviour {
 
     #region detailsAndBuyPhase
 
+    //Function that modifies the values for the text shown at the ship buff scren and the price of ships
     public void setBuffOfShip()
     {
         switch (index)
@@ -257,7 +306,8 @@ public class ShopController : MonoBehaviour {
                 break;
         }
     }
-    
+
+    //Function that modifies the values for the text shown at the ship debuff
     public void setDebuffOfShip()
     {
         switch (index)
@@ -286,6 +336,7 @@ public class ShopController : MonoBehaviour {
         }
     }
 
+    //This functions returns a bool that return true if the list isSpaceshipOwned contais the same number as the index that is passed as reference
     public bool checkIfBought(int indexOfShip)
     {
         if(isSpaceshipOwned.Contains(indexOfShip))
@@ -299,11 +350,7 @@ public class ShopController : MonoBehaviour {
 
     }
 
-    public void buyNewShip()
-    {
-
-    }
-
+    //Functions that deactivate the default canvas, activate the details canvas, call the function to set the name, buffs and debuffs of the ship and start the coroutine to tilt camera to left 
     public void showDetails()
     {        
         canvasShop.SetActive(false);
@@ -316,55 +363,93 @@ public class ShopController : MonoBehaviour {
         StartCoroutine("tiltCameraToLeft");
     }
 
+    //function that closes the canvas of details and activates the default canvas + startCoroutine that put camera on normal position
     public void returnToSelect()
     {
         canvasDetails.SetActive(false);
         canvasShop.SetActive(true);
 
         StartCoroutine("getCameraBackToNormal");
-
     }
 
     public void buyPopUpActivation()
     {
-        canvasPopUPBuy.SetActive(true);
-        priceOfItens.text = priceOfShip.ToString();
+        bool isShipOwned = checkIfBought(index);
+        if(isShipOwned)
+        {
+            canvasShipAlreadyOwned.SetActive(true);
+            canvasPopUPBuy.SetActive(false);
+        }
+        else
+        {
+            canvasPopUPBuy.SetActive(true);
+            priceOfItens.text = priceOfShip.ToString() + " EC";
+        }
+       
     }
 
     public void buy()
     {
-        if(scoreShop >= priceOfShip)
+        bool isShipOw = checkIfBought(index);
+
+        if (isShipOw)
         {
-            bool isShipOw = checkIfBought(index);
-
-            if(isShipOw)
-            {
-                canvasShipAlreadyOwned.SetActive(true);
-                canvasPopUPBuy.SetActive(false);
-            }
-            else
-            {
-                isSpaceshipOwned.Add(index);
-                canvasPopUPBuyConfirmation.SetActive(true);
-                canvasPopUPBuy.SetActive(false);
-            }            
-            scoreShop = scoreShop - priceOfShip;
-            Debug.Log(isShipOw);
-
+            canvasShipAlreadyOwned.SetActive(true);
+            canvasPopUPBuy.SetActive(false);
         }
 
-        if (scoreShop < priceOfShip)
+        if (scoreShop >= priceOfShip && !isShipOw)
+        {  
+            isSpaceshipOwned.Add(index);
+            canvasPopUPBuyConfirmation.SetActive(true);
+            canvasPopUPBuy.SetActive(false);
+            
+            scoreShop = scoreShop - priceOfShip;
+        }
+
+        else  
         {
             canvasPopUpWatchAd.SetActive(true);
             canvasPopUPBuy.SetActive(false);
         }
     }
 
+
+#region Ads
     public void watchAd()
     {
+        if (Advertisement.IsReady("rewardedVideo"))
+        {
+            var options = new ShowOptions { resultCallback = HandleShowResult };
+            Advertisement.Show("rewardedVideo", options);
+        }
+
+        
         canvasPopUpWatchAd.SetActive(false);
+        canvasUpgradeWatchAd.SetActive(false);
+        canvasDetails.SetActive(false);
+        canvasWatchADWarn.SetActive(true);
     }
 
+    private void HandleShowResult(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Finished:
+                Debug.Log("The ad was successfully shown.");
+                scoreShop += 100;
+                break;
+            case ShowResult.Skipped:
+                Debug.Log("The ad was skipped before reaching the end.");
+                break;
+            case ShowResult.Failed:
+                Debug.LogError("The ad failed to be shown.");
+                break;
+        }
+    }
+    #endregion /Ads
+
+#region canvasTreatment
     public void deactivateCanvasAfterPurchase()
     {
         canvasPopUPBuyConfirmation.SetActive(false);
@@ -379,7 +464,6 @@ public class ShopController : MonoBehaviour {
     {
         canvasPopUPBuy.SetActive(false);
         canvasPopUpWatchAd.SetActive(false);
-
     }
 
     public void backToDetailsAfterShipIsOwned()
@@ -387,7 +471,139 @@ public class ShopController : MonoBehaviour {
         canvasShipAlreadyOwned.SetActive(false);
         canvasDetails.SetActive(true);
     }
-  
+
+    public void returnToNormalCanvasAfterAdWatched()
+    {
+        StartCoroutine("getCameraBackToNormal");
+        canvasUpgrade.SetActive(false);
+        canvasWatchADWarn.SetActive(false);
+        canvasDetails.SetActive(false);
+        canvasShop.SetActive(true);
+    }
+    public void upgradeCanvas()
+    {
+        canvasUpgrade.SetActive(true);
+        canvasShop.SetActive(false);
+    }
+
+    public void canvasPopUpConfirmationNumProjectiles()
+    {
+        if(numProjectilesToBeUpgradedOnShop > 1 && numProjectilesToBeUpgradedOnShop < 3)
+        {
+            priceOfUpgradeNumProjectiles += 500;
+        }
+
+        if(numProjectilesToBeUpgradedOnShop >= 3 && numProjectilesToBeUpgradedOnShop <= 5)
+        {
+            priceOfUpgradeNumProjectiles += 1000;
+        }
+
+        if(numProjectilesToBeUpgradedOnShop > 5)
+        {
+            priceOfUpgradeNumProjectiles += 1500;
+        }
+        
+        canvasUpgradeBuyPopUpProjectile.SetActive(true);
+        textPriceOfUpgradeProjectile.text = priceOfUpgradeNumProjectiles.ToString() + " EC";
+    }
+
+    public void buyUpgradeNumProjectiles()
+    {
+        if (scoreShop > priceOfUpgradeNumProjectiles)
+        {
+            scoreShop -= priceOfUpgradeNumProjectiles;
+            numProjectilesToBeUpgradedOnShop += 1;
+            canvasProjectileSuccessfullyBought.SetActive(true);
+            canvasUpgradeBuyPopUpProjectile.SetActive(false);
+        }
+        else
+        {
+            canvasUpgradeBuyPopUpProjectile.SetActive(false);
+            canvasUpgradeWatchAd.SetActive(true);
+        }
+
+    }
+
+    public void returnFromPopUpConfirmationNumProjectiles()
+    {
+        canvasUpgradeBuyPopUpProjectile.SetActive(false);
+        canvasUpgrade.SetActive(true);
+    }
+
+    public void returnFromSuccesfullyBoughtProjectile()
+    {
+        canvasProjectileSuccessfullyBought.SetActive(false);
+        canvasUpgrade.SetActive(true);
+    }
+    //-----------------------------------------------------------------------
+    public void canvasPopUpConfirmationDelay()
+    {
+        if (delayBetweenAttacksToBeUpgraded > 1 && delayBetweenAttacksToBeUpgraded < 3)
+        {
+            priceOfUpgradeDelay += 200;
+        }
+
+        if (delayBetweenAttacksToBeUpgraded >= 3 && delayBetweenAttacksToBeUpgraded <= 5)
+        {
+            priceOfUpgradeDelay += 500;
+        }
+
+        if (delayBetweenAttacksToBeUpgraded > 5)
+        {
+            priceOfUpgradeNumProjectiles += 1000;
+        }
+
+        canvasUpgradeBuyPopUpDelay.SetActive(true);
+        textPriceOfUpgradeDelay.text = priceOfUpgradeDelay.ToString() + " EC";
+    }
+
+    public void buyUpgradDelay()
+    {
+        if (scoreShop > priceOfUpgradeDelay)
+        {
+            scoreShop -= priceOfUpgradeDelay;
+            priceOfUpgradeDelay += 1;
+            canvasDelaySuccessfullyBought.SetActive(true);
+            canvasUpgradeBuyPopUpProjectile.SetActive(false);
+        }
+        else
+        {
+            canvasUpgradeBuyPopUpDelay.SetActive(false);
+            canvasUpgradeWatchAd.SetActive(true);
+        }
+
+    }
+
+    public void returnFromPopUpConfirmationDelay()
+    {
+        canvasUpgradeBuyPopUpDelay.SetActive(false);
+        canvasUpgrade.SetActive(true);
+    }
+
+    public void returnFromSuccesfullyBoughtDelay()
+    {
+        canvasDelaySuccessfullyBought.SetActive(false);
+        canvasUpgrade.SetActive(true);
+    }
+    //-------------------------------------------------------------------------------------------
+
+
+
+    public void returnToNormalCanvasFromUpgrade()
+    {
+        canvasUpgrade.SetActive(false);
+        canvasShop.SetActive(true);
+    }
+
+    public void returnToUpgradeCanvasFromWatchAdUpgrade()
+    {
+        canvasUpgradeWatchAd.SetActive(false);
+        canvasUpgradeBuyPopUpProjectile.SetActive(false);
+        canvasUpgrade.SetActive(true);
+    }
+
+#endregion /canvasTreatment
+
     IEnumerator tiltCameraToLeft()
     {
         Vector3 correctedLocal = new Vector3(2f,0,0);
@@ -433,22 +649,58 @@ public class ShopController : MonoBehaviour {
 
         numProjectilesToBeUpgradedOnShop = SaveGame.Load("numProjectiles", numProjectilesToBeUpgradedOnShop);
         delayBetweenAttacksToBeUpgraded = SaveGame.Load("delayBetweenAttacks", delayBetweenAttacksToBeUpgraded);
+        isSpaceshipOwned = SaveGame.Load("listOfSpaceshipsOwned", isSpaceshipOwned);
     }
 
     public void Save()
     {
-        //save new quantity of points
-        
+        SaveGame.Save("score", scoreShop);
+        SaveGame.Save("numProjectiles", numProjectilesToBeUpgradedOnShop);
+        SaveGame.Save("delayBetweenAttacks", delayBetweenAttacksToBeUpgraded);
+        SaveGame.Save("typeOfSpaceShipBeingUsed", index);
+        SaveGame.Save("listOfSpaceshipsOwned", isSpaceshipOwned);
     }
 
-#endregion /saveAndLoad
+    #endregion /saveAndLoad
 
+    #region startGame
+
+    public void StartGame()
+    {
+        Save();        
+        bool isShipOwnedBeforeStartingTheGame = checkIfBought(index);
+
+        if(isShipOwnedBeforeStartingTheGame)
+        {
+            SceneManager.LoadScene("main_scene");
+        }        
+    }
+
+    #endregion /startGame
     public void Update()
     {
-        initialPoints.text = scoreShop.ToString();
-        initialPointDetails.text = scoreShop.ToString();
+        initialPoints.text = scoreShop.ToString() + " EC";
+        initialPointDetails.text = scoreShop.ToString() + " EC";
+        initialPointsUpgrade.text = scoreShop.ToString() + " EC";
 
-        mainCam = GameObject.FindGameObjectWithTag("MainCamera").transform;       
+        mainCam = GameObject.FindGameObjectWithTag("MainCamera").transform;
+
+        bool isShipOwned = checkIfBought(index);
+
+        if (isShipOwned)
+        {
+            Text textOfStartGameButton = buttonStartGame.GetComponent<Text>();
+            textOfStartGameButton.text = "Start Game";
+            buttonStartGame.interactable = true;            
+        }
+
+        else
+        {
+            Text textOfStartGameButton = buttonStartGame.GetComponent<Text>();
+            textOfStartGameButton.text = "Ship not owned";
+            buttonStartGame.interactable = false;
+        }
+
     }
 }
 
