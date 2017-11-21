@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Advertisements;
 //--------------------------------------Script para controle do main character----------------------
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
     /* -----------ATRIBUTOS----------
      * health: Quantidade de hp que o player terá (normal = 3)
@@ -21,7 +22,7 @@ public class Player : MonoBehaviour {
      */
 
     #region Attributes (variables)
-    int health;
+    public int health;
     int actualColor;
 
     public Transform[] muzzleShoot;
@@ -53,21 +54,25 @@ public class Player : MonoBehaviour {
     GameObject enemy;
     LivingEntity target;
     GameObject managerObject;
+
     public bool canRemoveMore = true;
     public bool canReviveMore;
     public bool canRegenerate;
+    public bool canReviveAndShowAds;
 
 
-   
+
 
     #endregion
 
-    void Start () {
+    void Start()
+    {
 
         timeBetweenAttacks = 1 * Time.deltaTime;
         count = 1 * Time.deltaTime;
         countRegeneration = 10;
         countRemoveMoreMSBetweenShots = 10;
+       
 
         //actual color: 1 = vermelho, 0 = verde;
         actualColor = 0;
@@ -75,6 +80,7 @@ public class Player : MonoBehaviour {
         canSpawnChargeAttack = true;
         canReviveMore = true;
         canRegenerate = true;
+        canReviveAndShowAds = true;
 
         //setando a cor inicial pra verde   
         foreach (SpriteRenderer sprite in modifiableColor)
@@ -92,7 +98,7 @@ public class Player : MonoBehaviour {
         spaceshipUsed = managerGetVariables.GetComponent<ManagerScene>().typeOfSpaceshipBeingUsed;
         numberProjectiles = managerGetVariables.GetComponent<ManagerScene>().numProjectiles;
         delayBetweenAttack = managerGetVariables.GetComponent<ManagerScene>().delayBetweenAttacks;
-        
+
 
         if (spaceshipUsed == 7)
         {
@@ -108,18 +114,18 @@ public class Player : MonoBehaviour {
             foreach (SpriteRenderer sprite in modifiableColor)
             {
                 //cor vermelha
-                sprite.color = Color32.Lerp(new Color32(60, 255, 142, 255),new Color32(255, 60, 60, 255), 1f);
+                sprite.color = Color32.Lerp(new Color32(60, 255, 142, 255), new Color32(255, 60, 60, 255), 1f);
                 gameObject.tag = "red";
             }
         }
-        
+
 
         if (color == 1)
         {
             foreach (SpriteRenderer sprite in modifiableColor)
             {
                 //lerp para cor verde
-                 sprite.color = Color32.Lerp(new Color32(255, 60, 60, 255), new Color32(60, 255, 142, 255), 1f);
+                sprite.color = Color32.Lerp(new Color32(255, 60, 60, 255), new Color32(60, 255, 142, 255), 1f);
                 gameObject.tag = "green";
             }
 
@@ -135,11 +141,11 @@ public class Player : MonoBehaviour {
             actualColor = 0;
         }
 
-        if(color == 0)
+        if (color == 0)
         {
             mainShield.startColor = new Color(1.00000f, 0.23529f, 0.23529f);
             actualColor = 1;
-        }        
+        }
     }
     #endregion
 
@@ -150,9 +156,10 @@ public class Player : MonoBehaviour {
         {
             damage += 1;
         }
+
         health -= damage;
 
-        if (health <= 2)
+        if (health == 2)
         {
             TrashMan.despawn(shield);
             GameObject newShield;
@@ -174,14 +181,14 @@ public class Player : MonoBehaviour {
             }
         }
 
-        if (health <= 1 && spaceshipUsed == 7 && canReviveMore == true)
+        if (health <= 1 && spaceshipUsed == 1 && canReviveMore == true)
         {
             TrashMan.spawn("Clear_Screen", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
             health = 1;
             canReviveMore = false;
         }
 
-        if (health <= 1)
+        if (health == 1)
         {
             TrashMan.despawn(shield);
             GameObject newShield;
@@ -203,14 +210,17 @@ public class Player : MonoBehaviour {
             }
         }
 
-        if (health <= 0 && !dead)
+        
+
+       if (health <= 0 && !dead)
         {
             Die();
         }
-        
+
     }
 
-    protected void Die()
+
+    public void Die()
     {
         dead = true;
         if (OnDeath != null)
@@ -218,6 +228,8 @@ public class Player : MonoBehaviour {
             OnDeath();
         }
         //TrashMan.spawn ("FireDestruct", gameObject.transform.position, gameObject.transform.rotation * flipSpawn);
+        GameObject canvasGameOver = managerGetVariables.canvasGameOver;
+        canvasGameOver.SetActive(true);
         sceneManager = GameObject.FindGameObjectWithTag("SceneManager");
         ManagerScene manageSceneVariableChanger = sceneManager.GetComponent<ManagerScene>();
         manageSceneVariableChanger.isPlayerAlive = false;
@@ -225,6 +237,7 @@ public class Player : MonoBehaviour {
         TrashMan.despawn(gameObject);
         dead = false;
         health = 3;
+
     }
     #endregion
 
@@ -233,9 +246,9 @@ public class Player : MonoBehaviour {
         switch (spaceshipUsed)
         {
             //case 1: Default spaceship the one without any kind of buffs
-            case 1:
-                
-                if (timeBetweenAttacks > delayBetweenAttack)
+            case 0:
+
+                if (timeBetweenAttacks > (10 - delayBetweenAttack))
                 {
                     count += 1 * Time.deltaTime;
                     /*GameObject chargeAttack =*/
@@ -259,7 +272,7 @@ public class Player : MonoBehaviour {
 
             //case 2: The spaceship who gets doubleDamage and causes double damage:
             case 2:
-                if (timeBetweenAttacks > delayBetweenAttack)
+                if (timeBetweenAttacks > (10 - delayBetweenAttack))
                 {
                     count += 1 * Time.deltaTime;
                     /*GameObject chargeAttack =*/
@@ -283,8 +296,8 @@ public class Player : MonoBehaviour {
                 break;
 
             //case 3: The bombardier spaceship: It does spawn a set of bombs that triples the damage instead of normal projectiles but will only spawn 1/4 of the projectiles
-            case 3:
-                int newDelay = delayBetweenAttack + 3;
+            case 6:
+                int newDelay =  (10 - delayBetweenAttack) + 3;
                 if (timeBetweenAttacks > newDelay)
                 {
                     count += 1 * Time.deltaTime;
@@ -306,11 +319,11 @@ public class Player : MonoBehaviour {
                             Attack("Bomb_Bombardier", 1);
                         }
 
-                        if(numberProjectiles>4)
+                        if (numberProjectiles > 4)
                         {
                             Attack("Bomb_Bombardier", numBombs);
                         }
-                        
+
                         count = 0;
                         timeBetweenAttacks = 0;
                         canSpawnChargeAttack = true;
@@ -319,7 +332,7 @@ public class Player : MonoBehaviour {
                 break;
 
             //case 4: Frozen is the spaceship that decreases the enemy attack speed
-            case 4:
+            case 3:
                 //that part of the code gets the miliseconds between each shot of the enemy and then subtracts 100 from it
 
                 float msBetweenAttacksEnemy = target.GetComponent<LivingEntity>().msBetweenShots;
@@ -330,17 +343,17 @@ public class Player : MonoBehaviour {
                     canRemoveMore = false;
                     countRemoveMoreMSBetweenShots = 0;
                 }
-                 
+
                 if (canRemoveMore == true)
                 {
                     msBetweenAttacksEnemy = msBetweenAttacksEnemy + 100;
                     canRemoveMore = false;
                     countRemoveMoreMSBetweenShots = 5;
-                } 
-                
+                }
+
                 target.SetMsBetweenAttacks(msBetweenAttacksEnemy);
 
-                if (timeBetweenAttacks > timeDoubledBetweenAttacks)
+                if (timeBetweenAttacks > (20 - timeDoubledBetweenAttacks))
                 {
                     count += 1 * Time.deltaTime;
                     /*GameObject chargeAttack =*/
@@ -362,13 +375,13 @@ public class Player : MonoBehaviour {
                 }
                 break;
             //case 5: Regenerator - Is the one who can regenerate his own shield every 5 seconds but can spawn half of the projectiles
-            case 5:
-                if (timeBetweenAttacks > delayBetweenAttack)
+            case 4:
+                if (timeBetweenAttacks > (10 -delayBetweenAttack))
                 {
                     if (health < 3 && canRegenerate == true)
                     {
                         health = 3;
- 
+
                         TrashMan.despawn(shield);
                         GameObject newShield;
                         newShield = TrashMan.spawn("Shield_UP", shieldMuzzle.position, shieldMuzzle.rotation);
@@ -413,7 +426,7 @@ public class Player : MonoBehaviour {
                 break;
 
             //case 6: DoubleGold - receives double of the gold but damage time between attacks is doubled
-            case 6:
+            case 5:
 
                 float doubleTimeAttack = delayBetweenAttack * 2;
                 int numProj = numberProjectiles / 2;
@@ -439,8 +452,8 @@ public class Player : MonoBehaviour {
                 }
                 break;
             //case 7: Second wind - The killer projectile will be deflected instead and clean all the screem but he begins with 1 less health
-            case 7:
-                if (timeBetweenAttacks > delayBetweenAttack)
+            case 1:
+                if (timeBetweenAttacks > (20 -delayBetweenAttack))
                 {
                     count += 1 * Time.deltaTime;
                     /*GameObject chargeAttack =*/
@@ -473,7 +486,7 @@ public class Player : MonoBehaviour {
      * 1 - Normal projectile
      */
 
-    void Attack(string typeAttack,int numProjectiles)
+    void Attack(string typeAttack, int numProjectiles)
     {
         if (numberProjectiles > 4)
         {
@@ -525,12 +538,31 @@ public class Player : MonoBehaviour {
 
         AttackOrBuffsBasedOnTypeOfSpaceship();
 
+    #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IOS
+
+        if (Input.touchCount > 0)
+        {
+            //Store the first touch detected.
+            Touch myTouch = Input.touches[0];
+
+            //Check if the phase of that touch equals Began
+            if (myTouch.phase == TouchPhase.Ended)
+            {
+                changeColorPlayer(actualColor);
+                changeColorShield(actualColor);
+            }
+        }
+#endif    
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
+
         if (Input.GetMouseButtonDown(0))
         {
             changeColorPlayer(actualColor);
             changeColorShield(actualColor);
             Debug.Log(actualColor);
         }
-    }
+    
+#endif
 
+    }
 }

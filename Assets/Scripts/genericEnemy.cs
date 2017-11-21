@@ -13,17 +13,24 @@ public class genericEnemy : LivingEntity
     float countTimeChange;
     float counterChangeMsAttack;
 
+
     protected override void Start()
     {
         base.Start();
-        msBetweenShots = 1000;
+        
         countTimeChange = 1 * Time.deltaTime;
         counterChangeMsAttack = 1 * Time.deltaTime;
-        health = startingHealth;
+        
+        
     }
-
+    private void Awake()
+    {
+        health = startingHealth;
+        msBetweenShots = 1000f;
+    }
     void Attack(int colorAttack)
     {
+        
         if (Time.time > nextShotTime)
         {
             if(colorAttack == 1)
@@ -42,6 +49,7 @@ public class genericEnemy : LivingEntity
 
     private void Update()
     {
+    
         counterChangeMsAttack += 1 * Time.deltaTime;
         countTimeChange += 1 * Time.deltaTime;
 
