@@ -10,6 +10,7 @@ UnityConnectSettings:
   m_TestInitMode: 0
   CrashReportingSettings:
     m_EventUrl: https://perf-events.cloud.unity3d.com/api/events/crashes
+    m_NativeEventUrl: https://perf-events.cloud.unity3d.com/symbolicate
     m_Enabled: 0
     m_CaptureEditorExceptions: 1
   UnityPurchasingSettings:
@@ -25,8 +26,11 @@ UnityConnectSettings:
     m_Enabled: 1
     m_InitializeOnStartup: 1
     m_TestMode: 1
-    m_EnabledPlatforms: 4294967295
     m_IosGameId: 1605644
     m_AndroidGameId: 1605643
+    m_GameIds:
+      AndroidPlayer: 1605643
+      iPhonePlayer: 1605644
+    m_GameId: 1605643
   PerformanceReportingSettings:
     m_Enabled: 0

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree;
 using UnityEngine.UI;
-using GoogleMobileAds.Api;
+//using GoogleMobileAds.Api;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 public class ManagerScene : MonoBehaviour {
@@ -22,7 +22,7 @@ public class ManagerScene : MonoBehaviour {
  
     public Text scoreText;
 
-    private BannerView bannerView;
+    //private BannerView bannerView;
 
     Player player;
 
@@ -34,19 +34,19 @@ public class ManagerScene : MonoBehaviour {
 #if UNITY_ANDROID
         string appId = "pub - 8813499873915106";
 #endif
-        MobileAds.Initialize(appId);
+        //MobileAds.Initialize(appId);
 
         isPlayerAlive = true;
         if (startOnLoad)
         {
             Load();
         }
-        bannerView = new BannerView(appId, AdSize.SmartBanner, AdPosition.Bottom);
+       // bannerView = new BannerView(appId, AdSize.SmartBanner, AdPosition.Bottom);
 
-        AdRequest request = new AdRequest.Builder().Build();
-
+       // AdRequest request = new AdRequest.Builder().Build();
+//
         // Load the banner with the request.
-        bannerView.LoadAd(request);
+       // bannerView.LoadAd(request);
 
         switch(typeOfSpaceshipBeingUsed)
         {
