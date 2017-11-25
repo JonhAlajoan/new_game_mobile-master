@@ -42,7 +42,7 @@ public class Projectile_Red : MonoBehaviour {
         sceneManagerUpdated.score += 1;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //Parte que procura a câmera e pega o componente script CameraShake
         GameObject camSearch = GameObject.FindGameObjectWithTag("MainCamera");

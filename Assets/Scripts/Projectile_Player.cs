@@ -30,7 +30,7 @@ public class Projectile_Player : MonoBehaviour {
         speed = 0.5f;
        count = 1 * Time.deltaTime;
     }
-    void Update()
+    void FixedUpdate()
     {
         
        target = GameObject.FindGameObjectWithTag("Enemy");

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class LivingEntity : MonoBehaviour {
 
     public float startingHealth;
@@ -17,7 +17,15 @@ public class LivingEntity : MonoBehaviour {
     protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("green");
-        target = player.GetComponent<Player>();
+        try
+        {
+            target = player.GetComponent<Player>();
+        }
+        catch(NullReferenceException)
+        {
+            Debug.Log("não encontrado");
+        }
+        
 
         health = startingHealth;
         auxHealth = health;   

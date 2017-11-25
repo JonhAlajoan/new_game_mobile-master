@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree;
 using UnityEngine.UI;
-//using GoogleMobileAds.Api;
+using GoogleMobileAds.Api;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 public class ManagerScene : MonoBehaviour {
@@ -22,36 +22,28 @@ public class ManagerScene : MonoBehaviour {
  
     public Text scoreText;
 
-    //private BannerView bannerView;
+    private BannerView bannerView;
 
     Player player;
 
+    string appId = "pub - 8813499873915106";
+    private string gameId = "1605643";
+
+    bool isConnectedOnInternet;
 
 
-	void Start () {
+    void Start () {
 
-
-#if UNITY_ANDROID
-        string appId = "pub - 8813499873915106";
-#endif
-        //MobileAds.Initialize(appId);
-
-        isPlayerAlive = true;
+        Advertisement.Initialize(gameId);
         if (startOnLoad)
         {
             Load();
         }
-       // bannerView = new BannerView(appId, AdSize.SmartBanner, AdPosition.Bottom);
 
-       // AdRequest request = new AdRequest.Builder().Build();
-//
-        // Load the banner with the request.
-       // bannerView.LoadAd(request);
-
-        switch(typeOfSpaceshipBeingUsed)
+        switch (typeOfSpaceshipBeingUsed)
         {
             case 0:
-                TrashMan.spawn("Main_Player_Default",muzzlePlayer.transform.position,muzzlePlayer.transform.rotation);
+                TrashMan.spawn("Main_Player_Default", muzzlePlayer.transform.position, muzzlePlayer.transform.rotation);
                 break;
             case 1:
                 TrashMan.spawn("Main_Player_SecondWind", muzzlePlayer.transform.position, muzzlePlayer.transform.rotation);
@@ -72,6 +64,21 @@ public class ManagerScene : MonoBehaviour {
                 TrashMan.spawn("Main_Player_Bombardier", muzzlePlayer.transform.position, muzzlePlayer.transform.rotation);
                 break;
         }
+
+    #if UNITY_ANDROID
+        
+    #endif
+        MobileAds.Initialize(appId);
+
+        isPlayerAlive = true;        
+        bannerView = new BannerView(appId, AdSize.SmartBanner, AdPosition.Bottom);
+
+        AdRequest request = new AdRequest.Builder().Build();
+//
+        // Load the banner with the request.
+        bannerView.LoadAd(request);
+        bannerView.Show();
+        
 
     }
 	
@@ -95,44 +102,17 @@ public class ManagerScene : MonoBehaviour {
         }
 	}
 
-    public void SaveScoreState()
-    {        
-        SaveGame.Save("score", score);
-    }
-
-    public void Load()
+    public void watchAd()
     {
-        score = SaveGame.Load("score", score);
-        numProjectiles = SaveGame.Load("numProjectiles", numProjectiles);
-        typeOfSpaceshipBeingUsed = SaveGame.Load("typeOfSpaceShipBeingUsed", typeOfSpaceshipBeingUsed);
-        delayBetweenAttacks = SaveGame.Load("delayBetweenAttacks", delayBetweenAttacks);        
-    }
+        while (!Advertisement.IsReady())
+        {
+            Debug.Log("Waiting");
+        }
 
-    public void playAgain()
-    {
-        SaveScoreState();
-        SceneManager.LoadScene("main_scene");
-    }
-
-    public void goToShop()
-    {
-        SaveScoreState();
-        SceneManager.LoadScene("_ShopScene");
-    }
-
-    public void returnToGameOverIfShowAdsRefused()
-    {
-        canvasShowAds.SetActive(false);
-        player.Die();
-    }
-
-    public void showAds()
-    {
-
-        if (Advertisement.IsReady("rewardedVideo"))
+        if (Advertisement.IsReady("video"))
         {
             var options = new ShowOptions { resultCallback = HandleShowResult };
-            Advertisement.Show("rewardedVideo", options);
+            Advertisement.Show("video", options);
         }
 
     }
@@ -143,21 +123,54 @@ public class ManagerScene : MonoBehaviour {
         {
             case ShowResult.Finished:
                 Debug.Log("The ad was successfully shown.");
-
-                canvasShowAds.SetActive(false);
-                player.health = 2;
-                Time.timeScale = 1f;
+                SaveScoreState();
+                SceneManager.LoadScene("_ShopScene");
                 break;
             case ShowResult.Skipped:
                 Debug.Log("The ad was skipped before reaching the end.");
-                Time.timeScale = 1f;
-                player.Die();
+                SaveScoreState();
+                SceneManager.LoadScene("_ShopScene");
+
                 break;
             case ShowResult.Failed:
-                Time.timeScale = 1f;
-                player.Die();
                 Debug.LogError("The ad failed to be shown.");
+                SaveScoreState();
+                SceneManager.LoadScene("_ShopScene");
                 break;
         }
     }
+
+    public void SaveScoreState()
+    {        
+        SaveGame.Save("score", score);
+    }
+
+    public void Load()
+    {
+        score = SaveGame.Load("score", score);
+        numProjectiles = SaveGame.Load("numProjectiles", numProjectiles);
+        typeOfSpaceshipBeingUsed = SaveGame.Load("typeOfSpaceShipBeingUsed", typeOfSpaceshipBeingUsed);
+        delayBetweenAttacks = SaveGame.Load("delayBetweenAttacks", delayBetweenAttacks);
+        isConnectedOnInternet = SaveGame.Load("statusOfConnection", isConnectedOnInternet);
+    }
+
+    public void playAgain()
+    {
+        SaveScoreState();
+        SceneManager.LoadScene("main_scene");
+    }
+
+    public void goToShop()
+    {
+        if(isConnectedOnInternet == true)
+        {
+            watchAd();
+        }
+        else
+        {
+            SceneManager.LoadScene("_ShopScene");
+        }
+               
+    }
+
 }

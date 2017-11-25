@@ -54,10 +54,12 @@ public class ShopController : MonoBehaviour {
     public GameObject canvasUpgradeBuyPopUpProjectile;
     public GameObject canvasUpgradeWatchAd;
     public GameObject canvasWatchADWarn;
+    public GameObject canvasWatchADFailed;
     public GameObject canvasUpgradeBuyPopUpDelay;
     public GameObject canvasProjectileSuccessfullyBought;
     public GameObject canvasDelaySuccessfullyBought;
     public GameObject canvasWatchADWarnShipShop;
+    public GameObject canvasNotConnectedToInternet;
 
     public Text buffDetails;
     public Text debuffDetails;
@@ -75,6 +77,9 @@ public class ShopController : MonoBehaviour {
     public int scoreShop;
 
     bool startOnLoad = true;
+    bool firstTimePlaying;
+    bool isConnectedOnInternet;
+    
 
     float valueToTilt;
 
@@ -88,7 +93,7 @@ public class ShopController : MonoBehaviour {
     public int index;
     float timeToCompleteTravel;
 
-
+    private string gameId = "1605643";
 
 
 
@@ -96,6 +101,9 @@ public class ShopController : MonoBehaviour {
 
     private void Start()
     {
+        firstTimePlaying = true;
+
+        bool firstTimePlayingSave = SaveGame.Load("firstTimePlaying", firstTimePlaying);
         index = 0;
         nameOfShipStart.text = "Verstek";
         timeToCompleteTravel = 5f;
@@ -107,7 +115,14 @@ public class ShopController : MonoBehaviour {
            Load();
         }
         
+        if(firstTimePlayingSave == true)
+        {
+            numProjectilesToBeUpgradedOnShop = 2;
+            firstTimePlayingSave = false;
+            Debug.Log("falseFirstTime");
+            SaveGame.Save("firstTimePlaying", firstTimePlayingSave);
 
+        }
     }
 
     #region selectionOfShips
@@ -409,7 +424,14 @@ public class ShopController : MonoBehaviour {
 
         else  
         {
-            canvasPopUpWatchAd.SetActive(true);
+            if(isConnectedOnInternet == true)
+            {
+                canvasPopUpWatchAd.SetActive(true);
+            }
+            else
+            {
+                canvasNotConnectedToInternet.SetActive(true);
+            }            
             canvasPopUPBuy.SetActive(false);
         }
     }
@@ -418,17 +440,19 @@ public class ShopController : MonoBehaviour {
 #region Ads
     public void watchAd()
     {
+        while(!Advertisement.IsReady())
+        {
+            Debug.Log("Waiting");
+        }
+
         if (Advertisement.IsReady("rewardedVideo"))
         {
             var options = new ShowOptions { resultCallback = HandleShowResult };
             Advertisement.Show("rewardedVideo", options);
-        }
-
-        
+        }        
         canvasPopUpWatchAd.SetActive(false);
         canvasUpgradeWatchAd.SetActive(false);
-        canvasDetails.SetActive(false);
-        canvasWatchADWarn.SetActive(true);
+        canvasDetails.SetActive(false);       
     }
 
     private void HandleShowResult(ShowResult result)
@@ -437,13 +461,17 @@ public class ShopController : MonoBehaviour {
         {
             case ShowResult.Finished:
                 Debug.Log("The ad was successfully shown.");
+                canvasWatchADWarn.SetActive(true);
                 scoreShop += 100;
                 break;
             case ShowResult.Skipped:
                 Debug.Log("The ad was skipped before reaching the end.");
+                canvasWatchADFailed.SetActive(true);
+
                 break;
             case ShowResult.Failed:
                 Debug.LogError("The ad failed to be shown.");
+                canvasWatchADFailed.SetActive(true);
                 break;
         }
     }
@@ -477,6 +505,15 @@ public class ShopController : MonoBehaviour {
         StartCoroutine("getCameraBackToNormal");
         canvasUpgrade.SetActive(false);
         canvasWatchADWarn.SetActive(false);
+        canvasDetails.SetActive(false);
+        canvasShop.SetActive(true);
+    }
+    public void returnToNormalCanvasAfterAdWatchedFail()
+    {
+        StartCoroutine("getCameraBackToNormal");
+        canvasUpgrade.SetActive(false);
+        canvasWatchADWarn.SetActive(false);
+        canvasWatchADFailed.SetActive(false);
         canvasDetails.SetActive(false);
         canvasShop.SetActive(true);
     }
@@ -602,6 +639,16 @@ public class ShopController : MonoBehaviour {
         canvasUpgrade.SetActive(true);
     }
 
+    public void returnToNormalAfterNoInternet()
+    {
+        canvasPopUpWatchAd.SetActive(false);
+        canvasUpgradeWatchAd.SetActive(false);
+        canvasDetails.SetActive(false);
+        canvasShop.SetActive(true);
+        canvasNotConnectedToInternet.SetActive(false);
+        StartCoroutine("getCameraBackToNormal");
+    }
+
 #endregion /canvasTreatment
 
     IEnumerator tiltCameraToLeft()
@@ -650,6 +697,7 @@ public class ShopController : MonoBehaviour {
         numProjectilesToBeUpgradedOnShop = SaveGame.Load("numProjectiles", numProjectilesToBeUpgradedOnShop);
         delayBetweenAttacksToBeUpgraded = SaveGame.Load("delayBetweenAttacks", delayBetweenAttacksToBeUpgraded);
         isSpaceshipOwned = SaveGame.Load("listOfSpaceshipsOwned", isSpaceshipOwned);
+        isConnectedOnInternet = SaveGame.Load("StatusOfConnection", isConnectedOnInternet);
     }
 
     public void Save()
@@ -677,7 +725,9 @@ public class ShopController : MonoBehaviour {
     }
 
     #endregion /startGame
-    public void Update()
+
+
+public void Update()
     {
         initialPoints.text = scoreShop.ToString() + " EC";
         initialPointDetails.text = scoreShop.ToString() + " EC";
