@@ -2,61 +2,99 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class genericEnemy : LivingEntity
-{
+public class scriptBoss1 : LivingEntity {
 
-    public Transform Muzzles;
-    public static int quantityMuzzlesUsed;
     public float nextShotTime;
     public float timeBetweenAttacks = 0.1f;
     public float nextAttackTime;
     float countTimeChange;
     float counterChangeMsAttack;
 
+    Color32 colorStart = new Color32(60, 255, 142, 255);
+    Color colorStartShield = new Color(0.23529f, 1.00000f, 0.55686f);
 
+    ParticleSystem weaponColor;
+    ParticleSystem.MainModule mainWeapon;
+    public GameObject[] weapons;
+
+    public GameObject boss;
+    Animator animatorBoss1;
+    int randomBullet;
 
     protected override void Start()
     {
+        randomBullet = 0;
         base.Start();
-        canShoot = true;
+        boss = GameObject.FindGameObjectWithTag("Enemy");
+        animatorBoss1 = boss.GetComponentInChildren<Animator>();
+
         countTimeChange = 1 * Time.deltaTime;
         counterChangeMsAttack = 1 * Time.deltaTime;
-        
-        
+        canShoot = true;
+
+
     }
     private void Awake()
     {
         health = startingHealth;
-        msBetweenShots = 1000f;
+        msBetweenShots = 4000f;
     }
+
+    
+
     void Attack(int colorAttack)
     {
-        
+
         if (Time.time > nextShotTime)
         {
-            if(colorAttack == 1)
+            
+            if (colorAttack == 1)
             {
                 nextShotTime = Time.time + msBetweenShots / 1000;
-                GameObject projectileRed = TrashMan.spawn("Bullet_Projectile_Red", Muzzles.transform.position, Muzzles.transform.rotation);
+                changeColor(1);
+                animatorBoss1.SetTrigger("attackLeft");
+                
             }
 
             if (colorAttack == 0)
             {
                 nextShotTime = Time.time + msBetweenShots / 1000;
-                GameObject projectile = TrashMan.spawn("Bullet_Projectile", Muzzles.transform.position, Muzzles.transform.rotation);
-            }            
+                changeColor(0);
+                animatorBoss1.SetTrigger("attackRight");
+            }
         }
+    }
+
+   public void changeColor(int color)
+    {
+        
+        foreach(GameObject weapon in weapons)
+        {
+            weaponColor = weapon.GetComponent<ParticleSystem>();
+            ParticleSystem.MainModule mainWeapon = weaponColor.main;
+
+            if (color == 1)
+            {
+                mainWeapon.startColor = new Color(1.00000f,0f, 0f);
+
+            }
+
+            if (color == 0)
+            {
+                mainWeapon.startColor = new Color(0.00000f,  0.59608f,  0.25098f);
+            }
+        }            
+           
     }
 
     private void Update()
     {
-    
         counterChangeMsAttack += 1 * Time.deltaTime;
         countTimeChange += 1 * Time.deltaTime;
 
-        if (counterChangeMsAttack >= 10 && msBetweenShots >= 500)
+        if (counterChangeMsAttack >= 10 && msBetweenShots >= 2000)
         {
-            msBetweenShots -= 100;
+            msBetweenShots -= 500;
             counterChangeMsAttack = 0;
         }
 
@@ -70,7 +108,9 @@ public class genericEnemy : LivingEntity
                     int randomBullet = Random.Range(0, 2);
                     if (randomBullet == 1)
                     {
+
                         Attack(1);
+
                     }
                     if (randomBullet == 0)
                     {
@@ -79,8 +119,7 @@ public class genericEnemy : LivingEntity
 
                 }
             }
-           
+            
         }
-       
     }
 }

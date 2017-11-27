@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using System;
 //--------------------------------------Script para controle do main character----------------------
 
 public class Player : MonoBehaviour
@@ -516,7 +517,15 @@ public class Player : MonoBehaviour
         managerGetVariables = managerObject.GetComponent<ManagerScene>();
 
         //switch who'll choose which type of attack will be used based on the number of the spaceship
-        target = enemy.GetComponent<LivingEntity>();
+        try
+        {
+            target = enemy.GetComponent<LivingEntity>();
+        }
+        catch(NullReferenceException)
+        {
+            Debug.Log("erro de viado");
+        }
+        
         if (spaceshipUsed == 5 && canRegenerate == false)
         {
             countRegeneration -= 1 * Time.deltaTime;

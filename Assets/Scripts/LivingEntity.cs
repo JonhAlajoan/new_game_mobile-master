@@ -7,12 +7,20 @@ public class LivingEntity : MonoBehaviour {
     public float startingHealth;
     protected float health;
     protected bool dead;
+    public  bool canShoot;
    
     public event System.Action OnDeath;
     public float auxHealth;
     public float msBetweenShots;
     GameObject player;
     Player target;
+
+    GameObject enemyObject;
+    public Animator animatorEnemy;
+
+    GameObject sceneManagerObject;
+    enemyManager enemyManager;
+
     bool resetTheMSBetweenAttacks;
     protected virtual void Start()
     {
@@ -24,6 +32,19 @@ public class LivingEntity : MonoBehaviour {
         catch(NullReferenceException)
         {
             Debug.Log("não encontrado");
+        }
+
+        try
+        {
+            sceneManagerObject = GameObject.FindGameObjectWithTag("SceneManager");
+            enemyManager = sceneManagerObject.GetComponent<enemyManager>();
+
+            enemyObject = GameObject.FindGameObjectWithTag("Enemy");
+            animatorEnemy = enemyObject.GetComponentInChildren<Animator>();
+        }
+        catch(NullReferenceException)
+        {
+            Debug.Log("erros");
         }
         
 
@@ -44,14 +65,38 @@ public class LivingEntity : MonoBehaviour {
 
         if (health <= 0 && !dead)
         {
-            
-                /*spawnControl.GetComponent<Spawner>().OnEnemyDeath();
-                scoreUpdt.GetComponent<Score>().updateScoreEnemyDeath();
-                gameObject.GetComponent<LivingEntity>().randomDropBomb();
-                gameObject.GetComponent<LivingEntity>().randomDropWPower();
-                */
-                Die();
+
+            /*spawnControl.GetComponent<Spawner>().OnEnemyDeath();
+            scoreUpdt.GetComponent<Score>().updateScoreEnemyDeath();
+            gameObject.GetComponent<LivingEntity>().randomDropBomb();
+            gameObject.GetComponent<LivingEntity>().randomDropWPower();
+            */
+            ManagerScene updateScore = sceneManagerObject.GetComponent<ManagerScene>();
+
+            updateScore.score += 100;
+
+            animatorEnemy.SetTrigger("death");
+
+            if (animatorEnemy.isInitialized)
+            {
+                StartCoroutine("destruction");
+            }
+
+            Die();
         }
+    }
+
+    IEnumerator destruction()
+    {
+        canShoot = false;
+        yield return new WaitForSeconds(5f);
+        enemyManager.updateEnemy();
+        enemyManager.needToSpawnEnemy = true;
+
+        dead = false;
+        health = startingHealth;
+        TrashMan.despawn(gameObject);
+
     }
 
     [ContextMenu("Self Destruct")]
@@ -62,9 +107,7 @@ public class LivingEntity : MonoBehaviour {
         {
             OnDeath();
         }
-        TrashMan.despawn(gameObject);
-        dead = false;
-        health = startingHealth;
+        
     }
 }
 
