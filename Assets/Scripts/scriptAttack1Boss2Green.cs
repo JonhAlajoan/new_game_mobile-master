@@ -24,7 +24,7 @@ public class scriptAttack1Boss2Green : MonoBehaviour {
 
     public void updateScore()
     {
-        sceneManagerUpdated.score += 1;
+        sceneManagerUpdated.score += 3;
     }
 
     void FixedUpdate()

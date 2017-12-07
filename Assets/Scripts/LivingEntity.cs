@@ -25,13 +25,14 @@ public class LivingEntity : MonoBehaviour {
     protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("green");
+
         try
         {
             target = player.GetComponent<Player>();
         }
         catch(NullReferenceException)
         {
-            Debug.Log("não encontrado");
+            Debug.Log("Player");
         }
 
         try

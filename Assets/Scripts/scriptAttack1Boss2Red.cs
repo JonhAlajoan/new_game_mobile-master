@@ -32,7 +32,7 @@ public class scriptAttack1Boss2Red : MonoBehaviour {
 
     public void updateScore()
     {
-        sceneManagerUpdated.score += 1;
+        sceneManagerUpdated.score += 3;
     }
 
     void FixedUpdate()
@@ -65,14 +65,12 @@ public class scriptAttack1Boss2Red : MonoBehaviour {
             cam.Shake(0.5f, 0.3f, 3f);
             damageableObject.takeDamage(damage);
 
-            TrashMan.despawn(gameObject);
         }
         //Se a tag for verde, então spawnar o efeito visual de absorção e despawnar a bala.
         if (damageableObject != null && damageableObject.tag == "red")
         {
             TrashMan.spawn("Hit_Absorbed_Red", damageableObject.transform.position, damageableObject.transform.rotation);
             updateScore();
-            TrashMan.despawn(gameObject);
         }
 
     }

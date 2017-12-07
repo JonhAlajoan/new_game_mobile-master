@@ -75,8 +75,9 @@ public class Projectile_Player : MonoBehaviour {
             //TrashMan.spawn("Hit_Enemy", gameObject.transform.position, gameObject.transform.rotation);
             Debug.Log("Camshake ativado");
             cam.Shake(0.1f, 0.1f,1.2f);
-            Debug.Log("dano tomado");
+            
             damageableObject.TakeDamage(damage);
+            Debug.Log("dano tomado");
             speed = 0.5f;
             count = 0;
             TrashMan.despawn(gameObject);

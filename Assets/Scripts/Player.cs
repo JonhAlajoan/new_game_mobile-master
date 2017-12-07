@@ -286,9 +286,9 @@ public class Player : MonoBehaviour
                     //ParticleSystem particleChargeAttack = chargeAttack.GetComponent<ParticleSystem>();
                     if (count > 2)
                     {
-                        int numProjectiles = numberProjectiles * 2;
+                        int numProjectiless = numberProjectiles * 2;
                         TrashMan.spawn("Instantiated_Bullet", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
-                        Attack("Projectile_Player", numProjectiles);
+                        Attack("Projectile_Player", numProjectiless);
                         count = 0;
                         timeBetweenAttacks = 0;
                         canSpawnChargeAttack = true;
@@ -428,7 +428,7 @@ public class Player : MonoBehaviour
 
             //case 6: DoubleGold - receives double of the gold but damage time between attacks is doubled
             case 5:
-
+                
                 float doubleTimeAttack = delayBetweenAttack * 2;
                 int numProj = numberProjectiles / 2;
                 if (timeBetweenAttacks > doubleTimeAttack)
@@ -489,25 +489,28 @@ public class Player : MonoBehaviour
 
     void Attack(string typeAttack, int numProjectiles)
     {
-        if (numberProjectiles > 4)
-        {
-            for (int i = 0; i < numProjectiles / 4; i++)
-            {
 
-                for (int j = 0; j < 4; j++)
+        if(numProjectiles > 2 && numProjectiles % 2 == 0)
+        {
+            for (int i = 0; i < numProjectiles / 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
                 {
                     TrashMan.spawn(typeAttack, muzzleShoot[j].transform.position, muzzleShoot[j].transform.rotation);
                 }
-
             }
         }
+
         else
         {
+
             for (int i = 0; i < numProjectiles; i++)
             {
                 TrashMan.spawn(typeAttack, muzzleShoot[i].transform.position, muzzleShoot[i].transform.rotation);
             }
+
         }
+
     }
 
     void Update()

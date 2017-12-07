@@ -72,6 +72,9 @@ public class ShopController : MonoBehaviour {
     public Text textPriceOfUpgradeProjectile;
     public Text textPriceOfUpgradeDelay;
 
+    public Text numOfProjectilesText;
+    public Text numOfDelayBetweenAttacksText;
+
     public Button buttonStartGame;
 
     public int scoreShop;
@@ -117,7 +120,7 @@ public class ShopController : MonoBehaviour {
         
         if(firstTimePlayingSave == true)
         {
-            numProjectilesToBeUpgradedOnShop = 2;
+            numProjectilesToBeUpgradedOnShop = 4;
             firstTimePlayingSave = false;
             Debug.Log("falseFirstTime");
             SaveGame.Save("firstTimePlaying", firstTimePlayingSave);
@@ -273,14 +276,6 @@ public class ShopController : MonoBehaviour {
     }
     #endregion /selecionOfShips
 
-    #region Upgrades
-    public void buyDelayBetweenAttacksUpgrade()
-    { }
-
-    public void buyNumberOfProjectilesUpgrade()
-    { }
-
-    #endregion /Upgrades
 
     #region detailsAndBuyPhase
 
@@ -427,14 +422,26 @@ public class ShopController : MonoBehaviour {
             if(isConnectedOnInternet == true)
             {
                 canvasPopUpWatchAd.SetActive(true);
+                canvasPopUPBuy.SetActive(false);
             }
             else
             {
                 canvasNotConnectedToInternet.SetActive(true);
+
+                canvasPopUPBuy.SetActive(false);
             }            
-            canvasPopUPBuy.SetActive(false);
+            
         }
     }
+
+   /* public void clearSave()
+    {
+        SaveGame.Delete("numProjectiles");
+        SaveGame.Delete("delayBetweenAttacks");
+        SaveGame.Delete("listOfSpaceshipsOwned");
+        numProjectilesToBeUpgradedOnShop = 4;
+        delayBetweenAttacksToBeUpgraded = 2;
+    }*/
 
 
 #region Ads
@@ -519,27 +526,14 @@ public class ShopController : MonoBehaviour {
     }
     public void upgradeCanvas()
     {
+
         canvasUpgrade.SetActive(true);
         canvasShop.SetActive(false);
     }
 
     public void canvasPopUpConfirmationNumProjectiles()
     {
-        if(numProjectilesToBeUpgradedOnShop > 1 && numProjectilesToBeUpgradedOnShop < 3)
-        {
-            priceOfUpgradeNumProjectiles += 500;
-        }
-
-        if(numProjectilesToBeUpgradedOnShop >= 3 && numProjectilesToBeUpgradedOnShop <= 5)
-        {
-            priceOfUpgradeNumProjectiles += 1000;
-        }
-
-        if(numProjectilesToBeUpgradedOnShop > 5)
-        {
-            priceOfUpgradeNumProjectiles += 1500;
-        }
-        
+                
         canvasUpgradeBuyPopUpProjectile.SetActive(true);
         textPriceOfUpgradeProjectile.text = priceOfUpgradeNumProjectiles.ToString() + " EC";
     }
@@ -549,7 +543,7 @@ public class ShopController : MonoBehaviour {
         if (scoreShop > priceOfUpgradeNumProjectiles)
         {
             scoreShop -= priceOfUpgradeNumProjectiles;
-            numProjectilesToBeUpgradedOnShop += 1;
+            numProjectilesToBeUpgradedOnShop += 2;
             canvasProjectileSuccessfullyBought.SetActive(true);
             canvasUpgradeBuyPopUpProjectile.SetActive(false);
         }
@@ -733,9 +727,13 @@ public void Update()
         initialPointDetails.text = scoreShop.ToString() + " EC";
         initialPointsUpgrade.text = scoreShop.ToString() + " EC";
 
+        numOfDelayBetweenAttacksText.text = delayBetweenAttacksToBeUpgraded.ToString();
+        numOfProjectilesText.text = numProjectilesToBeUpgradedOnShop.ToString();
+
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").transform;
 
         bool isShipOwned = checkIfBought(index);
+
 
         if (isShipOwned)
         {
