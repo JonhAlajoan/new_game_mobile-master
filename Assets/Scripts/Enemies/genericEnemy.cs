@@ -5,8 +5,8 @@ using UnityEngine;
 public class genericEnemy : LivingEntity
 {
 
-    public Transform Muzzles;
-    public static int quantityMuzzlesUsed;
+    //public Transform Muzzles;
+    //public static int quantityMuzzlesUsed;
     public float nextShotTime;
     public float timeBetweenAttacks = 0.1f;
     public float nextAttackTime;
@@ -14,6 +14,7 @@ public class genericEnemy : LivingEntity
     float counterChangeMsAttack;
 
 
+    public GameObject[] Muzzles;
 
     protected override void Start()
     {
@@ -27,24 +28,29 @@ public class genericEnemy : LivingEntity
     private void Awake()
     {
         health = startingHealth;
-        msBetweenShots = 1000f;
+        msBetweenShots = 300f;
     }
     void Attack(int colorAttack)
     {
         
         if (Time.time > nextShotTime)
         {
-            if(colorAttack == 1)
-            {
-                nextShotTime = Time.time + msBetweenShots / 1000;
-                GameObject projectileRed = TrashMan.spawn("Bullet_Projectile_Red", Muzzles.transform.position, Muzzles.transform.rotation);
-            }
 
-            if (colorAttack == 0)
+            for(int i = 0; i < Muzzles.Length;i++)
             {
-                nextShotTime = Time.time + msBetweenShots / 1000;
-                GameObject projectile = TrashMan.spawn("Bullet_Projectile", Muzzles.transform.position, Muzzles.transform.rotation);
-            }            
+                if (colorAttack == 1)
+                {
+                    nextShotTime = Time.time + msBetweenShots / 1000;
+                    GameObject projectileRed = TrashMan.spawn("Bullet_Projectile_Red", Muzzles[i].transform.position, Muzzles[i].transform.rotation);
+                }
+
+                if (colorAttack == 0)
+                {
+                    nextShotTime = Time.time + msBetweenShots / 1000;
+                    GameObject projectile = TrashMan.spawn("Bullet_Projectile", Muzzles[i].transform.position, Muzzles[i].transform.rotation);
+                }
+            }
+                  
         }
     }
 
