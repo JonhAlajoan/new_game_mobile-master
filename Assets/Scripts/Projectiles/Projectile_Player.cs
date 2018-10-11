@@ -14,7 +14,7 @@ public class Projectile_Player : MonoBehaviour {
     float speed;
 
     int damage = 1;
-
+	float acceleration;
     GameObject target;
     float count;
     LivingEntity damageableObject;
@@ -29,6 +29,7 @@ public class Projectile_Player : MonoBehaviour {
         randomDir = Random.Range(0, 2);
         speed = 0.5f;
        count = 1 * Time.deltaTime;
+		
     }
     void FixedUpdate()
     {
@@ -43,11 +44,11 @@ public class Projectile_Player : MonoBehaviour {
                 transform.Translate(Vector2.left * moveDistance);
             if(randomDir == 1)
                 transform.Translate(Vector2.right * moveDistance);
+		acceleration += speed;
         
-        
-        if (count > 1.5f)
+        if (count > 0.7f)
         {
-            speed = 7f;
+            speed = 10f;
             gameObject.transform.up = target.transform.position - gameObject.transform.position;
             transform.Translate(Vector2.up * moveDistance);
 
@@ -80,6 +81,7 @@ public class Projectile_Player : MonoBehaviour {
             Debug.Log("dano tomado");
             speed = 0.5f;
             count = 0;
+
             TrashMan.despawn(gameObject);
             
         }

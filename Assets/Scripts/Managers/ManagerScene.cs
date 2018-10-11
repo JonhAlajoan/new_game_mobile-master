@@ -24,12 +24,7 @@ public class ManagerScene : MonoBehaviour {
  
     public Text scoreText;
 
-    private BannerView bannerView;
-
     Player player;
-
-    string appId = "pub - 8813499873915106";
-    private string gameId = "1605643";
 
     bool isConnectedOnInternet;
 
@@ -38,13 +33,10 @@ public class ManagerScene : MonoBehaviour {
         if (startOnLoad)
         {
             Load();
-            CheckIfConnectedToInternet();
+          
         }
     }
     void Start () {
-
-        Advertisement.Initialize(gameId);
-        
 
         switch (typeOfSpaceshipBeingUsed)
         {
@@ -74,21 +66,13 @@ public class ManagerScene : MonoBehaviour {
     #if UNITY_ANDROID
         
     #endif
-        MobileAds.Initialize(appId);
+
 
         isPlayerAlive = true;        
-        bannerView = new BannerView(appId, AdSize.SmartBanner, AdPosition.Bottom);
-
-        AdRequest request = new AdRequest.Builder().Build();
-//
-        // Load the banner with the request.
-        bannerView.LoadAd(request);
-        bannerView.Show();
-        
 
     }
 	
-	// Update is called once per frame
+
 	void Update ()
     {        
         if(!isPlayerAlive)
@@ -108,44 +92,7 @@ public class ManagerScene : MonoBehaviour {
         }
 	}
 
-    public void watchAd()
-    {
-        while (!Advertisement.IsReady())
-        {
-            Debug.Log("Waiting");
-        }
-
-        if (Advertisement.IsReady("video"))
-        {
-            var options = new ShowOptions { resultCallback = HandleShowResult };
-            Advertisement.Show("video", options);
-        }
-
-    }
-
-    private void HandleShowResult(ShowResult result)
-    {
-        switch (result)
-        {
-            case ShowResult.Finished:
-                Debug.Log("The ad was successfully shown.");
-                SaveScoreState();
-                SceneManager.LoadScene("_ShopScene");
-                break;
-            case ShowResult.Skipped:
-                Debug.Log("The ad was skipped before reaching the end.");
-                SaveScoreState();
-                SceneManager.LoadScene("_ShopScene");
-
-                break;
-            case ShowResult.Failed:
-                Debug.LogError("The ad failed to be shown.");
-                SaveScoreState();
-                SceneManager.LoadScene("_ShopScene");
-                break;
-        }
-    }
-
+ 
     public void SaveScoreState()
     {        
         SaveGame.Save("score", score);
@@ -167,15 +114,7 @@ public class ManagerScene : MonoBehaviour {
 
     public void goToShop()
     {
-        if(isConnectedOnInternet == true)
-        {
-            watchAd();
-        }
-        else
-        {
-            SceneManager.LoadScene("_ShopScene");
-        }
-               
+		SceneManager.LoadScene("_ShopScene");               
     }
 
     public string GetHtmlFromUri(string resource)

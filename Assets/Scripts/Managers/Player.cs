@@ -61,6 +61,9 @@ public class Player : MonoBehaviour
     public bool canRegenerate;
     public bool canReviveAndShowAds;
 
+	public float speed;
+	bool move;
+	Vector3 targetMove;
 
 
 
@@ -68,7 +71,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
+		speed = 30;
         timeBetweenAttacks = 1 * Time.deltaTime;
         count = 1 * Time.deltaTime;
         countRegeneration = 10;
@@ -249,25 +252,26 @@ public class Player : MonoBehaviour
             //case 1: Default spaceship the one without any kind of buffs
             case 0:
 
-                if (timeBetweenAttacks > (10 - delayBetweenAttack))
+                if (timeBetweenAttacks > 1f)
                 {
-                    count += 1 * Time.deltaTime;
-                    /*GameObject chargeAttack =*/
-                    if (canSpawnChargeAttack == true)
+					TrashMan.spawn("Instantiated_Bullet", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
+					Attack("Projectile_Player", numberProjectiles);
+					count = 0;
+					timeBetweenAttacks = 0;
+					canSpawnChargeAttack = true;
+					// count += 1 * Time.deltaTime;
+
+					/*if (canSpawnChargeAttack == true)
                     {
                         TrashMan.spawn("Charge_Attack", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
                         canSpawnChargeAttack = false;
-                    }
+                    }*/
 
-                    //ParticleSystem particleChargeAttack = chargeAttack.GetComponent<ParticleSystem>();
-                    if (count > 2)
+					//ParticleSystem particleChargeAttack = chargeAttack.GetComponent<ParticleSystem>();
+					/*if (count > 2)
                     {
-                        TrashMan.spawn("Instantiated_Bullet", shieldMuzzle.transform.position, shieldMuzzle.transform.rotation);
-                        Attack("Projectile_Player", numberProjectiles);
-                        count = 0;
-                        timeBetweenAttacks = 0;
-                        canSpawnChargeAttack = true;
-                    }
+                        
+                    }*/
                 }
                 break;
 
@@ -550,7 +554,7 @@ public class Player : MonoBehaviour
 
         AttackOrBuffsBasedOnTypeOfSpaceship();
 
-    #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IOS
+#if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IOS
 
         if (Input.touchCount > 0)
         {
@@ -564,17 +568,32 @@ public class Player : MonoBehaviour
                 changeColorShield(actualColor);
             }
         }
-#endif    
+#endif
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
 
+		
         if (Input.GetMouseButtonDown(0))
         {
+		
+			targetMove = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
+			Input.mousePosition.y, Camera.main.nearClipPlane));
+			targetMove.z = 0;
+
+
+
+			if (move == false)
+				move = true;
+			
             changeColorPlayer(actualColor);
             changeColorShield(actualColor);
-            Debug.Log(actualColor);
+			//transform.position = playerPos;
+            //Debug.Log(actualColor);
+			
         }
-    
+		if (move == true)
+			transform.position = Vector3.MoveTowards(transform.position, targetMove, speed * Time.deltaTime);
+
 #endif
 
-    }
+	}
 }
