@@ -61,6 +61,8 @@ public class Player : MonoBehaviour
 	private float doubleClickTime = 0.5f;
 	private float lastClickTime = -10f;
 
+	bool canChangeColor = false;
+
 
 	#endregion
 
@@ -286,7 +288,7 @@ public class Player : MonoBehaviour
 
 		if(Input.GetMouseButtonDown(0))
 		{
-			float timeDelta = Time.time - lastClickTime;
+			/*float timeDelta = Time.time - lastClickTime;
 
 			if (timeDelta < doubleClickTime)
 			{
@@ -300,8 +302,21 @@ public class Player : MonoBehaviour
 			else
 			{
 				lastClickTime = Time.time;
+			}*/
+			
+			if(canChangeColor == true)
+			{
+				changeColorPlayer(actualColor);
+				changeColorShield(actualColor);
+				canChangeColor = false;
 			}
+				
 
+		}
+
+		if(Input.GetMouseButtonUp(0))
+		{
+			canChangeColor = true;
 		}
 
 		if (Input.GetMouseButton(0))
@@ -331,6 +346,7 @@ public class Player : MonoBehaviour
         }
 		if (move == true)
 			transform.position = Vector3.MoveTowards(transform.position, targetMove, speed * Time.deltaTime);
+	
 
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
 
@@ -347,22 +363,19 @@ public class Player : MonoBehaviour
             Touch myTouch = Input.touches[0];
 			if (myTouch.phase == TouchPhase.Began)
 			{
-				float timeDelta = Time.time - lastClickTime;
-
-				if (timeDelta < doubleClickTime)
+				if(canChangeColor == true)
 				{
-					Debug.Log("double click" + timeDelta);
-
 					changeColorPlayer(actualColor);
 					changeColorShield(actualColor);
-
-					lastClickTime = 0;
-				}
-				else
-				{
-					lastClickTime = Time.time;
+					canChangeColor = false;
 				}
 			}
+			
+			if(myTouch.phase == TouchPhase.Ended)
+			{
+				canChangeColor = true;
+			}
+
             //Check if the phase of that touch equals Began
             if (myTouch.phase == TouchPhase.Began || myTouch.phase == TouchPhase.Moved)
             {
