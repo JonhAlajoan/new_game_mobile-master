@@ -443,7 +443,7 @@ public class ShopController : MonoBehaviour {
         delayBetweenAttacksToBeUpgraded = 2;
     }*/
 
-
+/*
 #region Ads
     public void watchAd()
     {
@@ -483,7 +483,7 @@ public class ShopController : MonoBehaviour {
         }
     }
     #endregion /Ads
-
+	*/
 #region canvasTreatment
     public void deactivateCanvasAfterPurchase()
     {

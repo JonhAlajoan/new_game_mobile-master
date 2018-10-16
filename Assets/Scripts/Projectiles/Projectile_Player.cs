@@ -22,38 +22,21 @@ public class Projectile_Player : MonoBehaviour {
     CameraShake cam;
 
     int randomDir;
-    //Função para modificar a velocidade da bala em runtime caso necessário
 
-    private void Start()
-    {
-        randomDir = Random.Range(0, 2);
-        speed = 0.5f;
-       count = 1 * Time.deltaTime;
-		
-    }
     void FixedUpdate()
     {
         
-       target = GameObject.FindGameObjectWithTag("Enemy");
+   
        float moveDistance = speed * Time.deltaTime;
-       
-        count += 1 * Time.deltaTime;
+
+		count += 1 * Time.deltaTime;
         
-        
-            if (randomDir == 0)
-                transform.Translate(Vector2.left * moveDistance);
-            if(randomDir == 1)
-                transform.Translate(Vector2.right * moveDistance);
-		acceleration += speed;
-        
-        if (count > 0.7f)
-        {
-            speed = 10f;
-            gameObject.transform.up = target.transform.position - gameObject.transform.position;
+		
+            speed = 30f;
+           
             transform.Translate(Vector2.up * moveDistance);
 
-        }
-
+       
         
 
         //Parte que procura a câmera e pega o componente script CameraShake
@@ -61,7 +44,12 @@ public class Projectile_Player : MonoBehaviour {
         cam = camSearch.GetComponent<CameraShake>();
 
         //Movimentação do projétil
-        
+        if(count>0.7f)
+		{
+			count = 0;
+			TrashMan.despawn(gameObject);
+
+		}
    
 
     }
@@ -73,16 +61,18 @@ public class Projectile_Player : MonoBehaviour {
         //Se a tag do inimigo estiver como vermelha e como este projétil é o verde, então o dano deve ser causado. Função CamShake utilizada pra sacudir a tela 
         if (damageableObject != null && damageableObject.tag == "Enemy")
         {
-            //TrashMan.spawn("Hit_Enemy", gameObject.transform.position, gameObject.transform.rotation);
-            Debug.Log("Camshake ativado");
-            cam.Shake(0.1f, 0.1f,1.2f);
+			TrashMan.spawn("VFX_HIT_PPLAYER", gameObject.transform.position, gameObject.transform.rotation);
+			Debug.Log("Camshake ativado");
+            cam.Shake(0.05f, 0.07f,1.2f);
             
             damageableObject.TakeDamage(damage);
             Debug.Log("dano tomado");
             speed = 0.5f;
             count = 0;
 
-            TrashMan.despawn(gameObject);
+			
+
+			TrashMan.despawn(this.gameObject);
             
         }
         

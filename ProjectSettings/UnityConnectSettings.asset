@@ -3,7 +3,7 @@
 --- !u!310 &1
 UnityConnectSettings:
   m_ObjectHideFlags: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_TestMode: 0
   m_TestEventUrl: 
   m_TestConfigUrl: 
@@ -32,6 +32,6 @@ UnityConnectSettings:
       AndroidPlayer: 1605643
       iPhonePlayer: 1605644
       tvOSPlayer: 1605644
-    m_GameId: 
+    m_GameId: 1605643
   PerformanceReportingSettings:
     m_Enabled: 0
