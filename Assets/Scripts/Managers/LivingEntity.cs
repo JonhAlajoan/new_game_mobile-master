@@ -21,7 +21,11 @@ public class LivingEntity : MonoBehaviour {
     GameObject sceneManagerObject;
     enemyManager enemyManager;
 
+	HealthBarManager healthBarManager;
+
     bool resetTheMSBetweenAttacks;
+
+
     protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("green");
@@ -32,13 +36,14 @@ public class LivingEntity : MonoBehaviour {
         }
         catch(NullReferenceException)
         {
-            Debug.Log("Player");
+            Debug.Log("Player não encontrado!");
         }
 
         try
         {
             sceneManagerObject = GameObject.FindGameObjectWithTag("SceneManager");
             enemyManager = sceneManagerObject.GetComponent<enemyManager>();
+			healthBarManager = sceneManagerObject.GetComponent<HealthBarManager>();
 
             enemyObject = GameObject.FindGameObjectWithTag("Enemy");
             animatorEnemy = enemyObject.GetComponentInChildren<Animator>();
@@ -66,22 +71,16 @@ public class LivingEntity : MonoBehaviour {
 
         if (health <= 0 && !dead)
         {
-
-            /*spawnControl.GetComponent<Spawner>().OnEnemyDeath();
-            scoreUpdt.GetComponent<Score>().updateScoreEnemyDeath();
-            gameObject.GetComponent<LivingEntity>().randomDropBomb();
-            gameObject.GetComponent<LivingEntity>().randomDropWPower();
-            */
             ManagerScene updateScore = sceneManagerObject.GetComponent<ManagerScene>();
 
             updateScore.score += 100;
 
             animatorEnemy.SetTrigger("death");
-			
+			Camera.main.GetComponent<Animator>().SetTrigger("death");
 
             if (animatorEnemy.isInitialized)
-            {
-                StartCoroutine("destruction");
+			{ 
+				StartCoroutine("destruction");
 				TrashMan.spawn("VFX_DEATH_BOSS", transform.position, transform.rotation);
 			}
 
@@ -92,13 +91,13 @@ public class LivingEntity : MonoBehaviour {
     IEnumerator destruction()
     {
         canShoot = false;
-        yield return new WaitForSeconds(10f);
+		yield return new WaitForSeconds(10f);
         enemyManager.updateEnemy();
         enemyManager.needToSpawnEnemy = true;
-
         dead = false;
         health = startingHealth;
-        TrashMan.despawn(gameObject);
+		Camera.main.GetComponent<Animator>().SetTrigger("returnDeath");
+		TrashMan.despawn(gameObject);
 
     }
 

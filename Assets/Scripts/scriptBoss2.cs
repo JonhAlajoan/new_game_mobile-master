@@ -35,8 +35,12 @@ public class scriptBoss2 : LivingEntity {
         counterChangeMsAttack = 1 * Time.deltaTime;
         canShoot = true;
 
+		boss = GameObject.FindGameObjectWithTag("Enemy");
+		animatorBoss2 = boss.GetComponentInChildren<Animator>();
 
-    }
+
+	}
+
     private void Awake()
     {
         health = startingHealth;

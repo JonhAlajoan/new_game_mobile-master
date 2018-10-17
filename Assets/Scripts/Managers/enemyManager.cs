@@ -31,7 +31,7 @@ public class enemyManager : MonoBehaviour {
                 TrashMan.spawn("Boss1", muzzleEnemies.transform.position, muzzleEnemies.transform.rotation);
                 break;
                 
-                case 2:
+            case 2:
                 TrashMan.spawn("Boss2", muzzleEnemies.transform.position, muzzleEnemies.transform.rotation);
                 break;
                 /*

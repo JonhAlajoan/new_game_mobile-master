@@ -603,7 +603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7782f5aad611e488045d9c444212f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 100
+  startingHealth: 50
   canShoot: 0
   auxHealth: 0
   msBetweenShots: 0
