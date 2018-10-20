@@ -76,11 +76,13 @@ public class LivingEntity : MonoBehaviour {
             updateScore.score += 100;
 
             animatorEnemy.SetTrigger("death");
-			Camera.main.GetComponent<Animator>().SetTrigger("death");
+
 
             if (animatorEnemy.isInitialized)
 			{ 
+
 				StartCoroutine("destruction");
+	
 				TrashMan.spawn("VFX_DEATH_BOSS", transform.position, transform.rotation);
 			}
 
@@ -91,14 +93,17 @@ public class LivingEntity : MonoBehaviour {
     IEnumerator destruction()
     {
         canShoot = false;
+		
+		Camera.main.GetComponent<CameraShake>().Shake(1f, 3f, 3f);
+
+		
 		yield return new WaitForSeconds(10f);
         enemyManager.updateEnemy();
         enemyManager.needToSpawnEnemy = true;
         dead = false;
         health = startingHealth;
-		Camera.main.GetComponent<Animator>().SetTrigger("returnDeath");
+		
 		TrashMan.despawn(gameObject);
-
     }
 
     [ContextMenu("Self Destruct")]

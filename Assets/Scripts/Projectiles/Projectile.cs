@@ -24,6 +24,8 @@ public class Projectile : MonoBehaviour {
 
     CameraShake cam;
 
+	float lifetime;
+
     //Função para modificar a velocidade da bala em runtime caso necessário
     public void SetSpeed(float newSpeed)
     {
@@ -39,7 +41,7 @@ public class Projectile : MonoBehaviour {
         sceneManagerUpdated.score += 1;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         //Parte que procura a câmera e pega o componente script CameraShake
         GameObject camSearch = GameObject.FindGameObjectWithTag("MainCamera");
@@ -51,6 +53,10 @@ public class Projectile : MonoBehaviour {
         //Movimentação do projétil
         float moveDistance = speed * Time.deltaTime;
         transform.Translate(Vector2.down * moveDistance);
+		lifetime += 1 * Time.deltaTime;
+
+		if (lifetime > 5)
+			TrashMan.despawn(gameObject);
 
     }
     
