@@ -5,87 +5,78 @@ using UnityEngine.Advertisements;
 using System;
 //--------------------------------------Script para controle do main character----------------------
 
-public class Player : MonoBehaviour
+public abstract class Player : MonoBehaviour, IPlayerBehaviour	
 {
 
-    /* -----------ATRIBUTOS----------
-     * health: Quantidade de hp que o player terá (normal = 3)
-     * actualColor: Flag que controla se a cor atual é verde ou vermelha (0 = vermelho, 1 = verde).
-     * shieldMuzzle: Local onde os novos shields serão spawnados.
-     * shield: Shield sendo utilizado no momento
-     * modifiableColor: Array de sprites que é percorrido num foreach para modificar a cor do player
-     * shieldColor: pega o particleSystem do shield atual
-     * mainShield: Módulo principal do mainShield, necessário para modificar a cor por não conseguir fazer isso diretamente.
-     * colorStart = Cor inicial do player
-     * colorStartShield = Cor inicial do shield
-     * event onDeath = Evento de morte do player que ativa a função die() para indicar a morte do player
-     * dead: Bool para informar melhor a situação de vida e morte do player
-     */
+	#region Attributes (variables)
 
-    #region Attributes (variables)
-    public int health;
-    int actualColor;
+	public event System.Action OnDeath;
 
-    public Transform[] muzzleShoot;
+	public ManagerScene managerGetVariables;
+
+	LivingEntity target;
+
+	public Transform[] muzzleShoot;
     public Transform shieldMuzzle;
     public GameObject shield;
     GameObject sceneManager;
+	GameObject enemy;
+	GameObject managerObject;
 
-    public SpriteRenderer[] modifiableColor;
+	public SpriteRenderer[] modifiableColor;
 
     ParticleSystem shieldColor;
     ParticleSystem.MainModule mainShield;
 
     Color32 colorStart = new Color32(60, 255, 142, 255);
     Color colorStartShield = new Color(0.23529f, 1.00000f, 0.55686f);
-
-    public event System.Action OnDeath;
+   
     public int numberProjectiles;
     public int spaceshipUsed;
     public int delayBetweenAttack;
+	public int health;
+	int actualColor;
 
-    public float count;
+	public float count;
     public float timeBetweenAttacks;
-
-    bool dead;
-
-    public ManagerScene managerGetVariables;
-    GameObject enemy;
-    LivingEntity target;
-    GameObject managerObject;
-
-	public float speed;
-	bool move;
-	Vector3 targetMove;
-
 	private float doubleClickTime = 0.5f;
 	private float lastClickTime = -10f;
+	public float speed;
+	float timeOfInvulnerability;
 
+	bool dead;
+	bool move;
 	bool canChangeColor = false;
+	bool isInvulnerable = false;
 
+	Vector3 targetMove;
+
+	CapsuleCollider2D colliderPlayer;
 
 	#endregion
 
-	void Start()
+	public void SetStartingAttributes(float _speed, int _health, float _timeOfInvul)
+	{
+		speed = _speed;
+		health = _health;
+		timeOfInvulnerability = _timeOfInvul;
+	}
+
+	public virtual void Start()
     {
-		speed = 100;
         timeBetweenAttacks = 1 * Time.deltaTime;
         count = 1 * Time.deltaTime;       
 
-        //actual color: 1 = vermelho, 0 = verde;
         actualColor = 0;
         health = 3;
 
-        //setando a cor inicial pra verde   
+        
         foreach (SpriteRenderer sprite in modifiableColor)
         {
             sprite.color = colorStart;
         }
 
-        GameObject newShield;
-        newShield = TrashMan.spawn("Shield_UP", shieldMuzzle.position, shieldMuzzle.rotation);
-        shield = newShield;
-		shield.transform.parent = gameObject.transform;
+		SpawnNewShield("Shield_UP");
 
         managerObject = GameObject.FindGameObjectWithTag("SceneManager");
         managerGetVariables = managerObject.GetComponent<ManagerScene>();
@@ -94,6 +85,8 @@ public class Player : MonoBehaviour
         numberProjectiles = managerGetVariables.GetComponent<ManagerScene>().numProjectiles;
         delayBetweenAttack = managerGetVariables.GetComponent<ManagerScene>().delayBetweenAttacks;
 
+		colliderPlayer = GetComponent<CapsuleCollider2D>();
+
         if (spaceshipUsed == 7)
         {
             health -= 1;
@@ -101,7 +94,7 @@ public class Player : MonoBehaviour
     }
 
     #region Color Control Functions
-    void changeColorPlayer(int color)
+    public void changeColorPlayer(int color)
     {
         if (color == 0)
         {
@@ -124,26 +117,59 @@ public class Player : MonoBehaviour
             }
 
         }
+
+		if(color == 2)
+		{
+			foreach (SpriteRenderer sprite in modifiableColor)
+			{
+				//lerp para cor Roxa
+				sprite.color = Color32.Lerp(new Color32(255, 255, 0, 255), new Color32(172, 0, 255, 255), Mathf.Sin(Time.time * 40));
+				gameObject.tag = "green";
+			}
+		}
     }
-    void changeColorShield(int color)
+    public void changeColorShield(int color)
     {
         shieldColor = shield.GetComponent<ParticleSystem>();
         ParticleSystem.MainModule mainShield = shieldColor.main;
-        if (color == 1)
+
+		if (color == 0)
+		{
+			mainShield.startColor = new Color(1.00000f, 0.23529f, 0.23529f);
+			actualColor = 1;
+		}
+
+		if (color == 1)
         {
             mainShield.startColor = new Color(0.23529f, 1.00000f, 0.55686f);
             actualColor = 0;
         }
 
-        if (color == 0)
-        {
-            mainShield.startColor = new Color(1.00000f, 0.23529f, 0.23529f);
-            actualColor = 1;
-        }
+		if(color == 2)
+		{
+			mainShield.startColor = Color.Lerp(new Color(0.67059f, 0f, 1f), new Color(1f, 1f, 0f), Mathf.Sin(Time.time * 40));
+			actualColor = 0;
+		}
     }
     #endregion
 
     #region Damage and Death Control
+
+	IEnumerator Invulnerability(float _timeOfInvulnerability)
+	{
+		colliderPlayer.enabled = false;
+
+		isInvulnerable = true;
+
+		yield return new WaitForSeconds(_timeOfInvulnerability);
+
+		changeColorPlayer(1);
+		changeColorShield(1);
+		isInvulnerable = false;
+
+		colliderPlayer.enabled = true;
+	}
+
     public void takeDamage(int damage)
     {
         if (spaceshipUsed == 2)
@@ -155,51 +181,17 @@ public class Player : MonoBehaviour
 
         if (health == 2)
         {
-            TrashMan.despawn(shield);
-            GameObject newShield;
-            newShield = TrashMan.spawn("Shield_Breaking", shieldMuzzle.position, shieldMuzzle.rotation);
-            shield = newShield;
+			SpawnNewShield("Shield_Breaking");
+			StartCoroutine(Invulnerability(timeOfInvulnerability));
 			
-
-            if (GameObject.FindGameObjectWithTag("red"))
-            {
-                shieldColor = shield.GetComponent<ParticleSystem>();
-                ParticleSystem.MainModule mainShield = shieldColor.main;
-                mainShield.startColor = new Color(1.00000f, 0.23529f, 0.23529f);
-            }
-
-            if (GameObject.FindGameObjectWithTag("green"))
-            {
-                shieldColor = shield.GetComponent<ParticleSystem>();
-                ParticleSystem.MainModule mainShield = shieldColor.main;
-                mainShield.startColor = new Color(0.23529f, 1.00000f, 0.55686f);
-            }
         }
 
         if (health == 1)
         {
-            TrashMan.despawn(shield);
-            GameObject newShield;
-            newShield = TrashMan.spawn("Shield_Fim", shieldMuzzle.position, shieldMuzzle.rotation);
-            shield = newShield;
+			SpawnNewShield("Shield_Fim");
+			StartCoroutine(Invulnerability(timeOfInvulnerability));
 			
-
-            if (GameObject.FindGameObjectWithTag("red"))
-            {
-                shieldColor = shield.GetComponent<ParticleSystem>();
-                ParticleSystem.MainModule mainShield = shieldColor.main;
-                mainShield.startColor = new Color(1.00000f, 0.23529f, 0.23529f);
-            }
-
-            if (GameObject.FindGameObjectWithTag("green"))
-            {
-                shieldColor = shield.GetComponent<ParticleSystem>();
-                ParticleSystem.MainModule mainShield = shieldColor.main;
-                mainShield.startColor = new Color(0.23529f, 1.00000f, 0.55686f);
-            }
         }
-
-		shield.transform.parent = gameObject.transform;
 
 		if (health <= 0 && !dead)
         {
@@ -208,19 +200,57 @@ public class Player : MonoBehaviour
 
     }
 
+	public virtual void SpawnNewShield(string _typeOfShield)
+	{
+		if(shield == null)
+		{
+			GameObject newShield;
+			newShield = TrashMan.spawn(_typeOfShield, shieldMuzzle.position, shieldMuzzle.rotation);
+			shield = newShield;
+		}
+		else
+		{
+			TrashMan.despawn(shield);
+			GameObject newShield;
+			newShield = TrashMan.spawn(_typeOfShield, shieldMuzzle.position, shieldMuzzle.rotation);
+			shield = newShield;
+		}
 
-    public void Die()
+		if (GameObject.FindGameObjectWithTag("red"))
+		{
+			shieldColor = shield.GetComponent<ParticleSystem>();
+			ParticleSystem.MainModule mainShield = shieldColor.main;
+			mainShield.startColor = new Color(1.00000f, 0.23529f, 0.23529f);
+		}
+
+		if (GameObject.FindGameObjectWithTag("green"))
+		{
+			shieldColor = shield.GetComponent<ParticleSystem>();
+			ParticleSystem.MainModule mainShield = shieldColor.main;
+			mainShield.startColor = new Color(0.23529f, 1.00000f, 0.55686f);
+		}
+
+		shield.transform.parent = gameObject.transform;
+	}
+
+
+    public virtual void Die()
     {
         dead = true;
+
         if (OnDeath != null)
         {
             OnDeath();
         }
-        //TrashMan.spawn ("FireDestruct", gameObject.transform.position, gameObject.transform.rotation * flipSpawn);
+
         GameObject canvasGameOver = managerGetVariables.canvasGameOver;
+
         canvasGameOver.SetActive(true);
+
         sceneManager = GameObject.FindGameObjectWithTag("SceneManager");
+
         ManagerScene manageSceneVariableChanger = sceneManager.GetComponent<ManagerScene>();
+
         manageSceneVariableChanger.isPlayerAlive = false;
 
         TrashMan.despawn(gameObject);
@@ -230,58 +260,34 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    void AttackOrBuffsBasedOnTypeOfSpaceship()
+
+    public virtual void Attack(string typeAttack, int numProjectiles)
     {
-        switch (spaceshipUsed)
-        {
-            //case 1: Default spaceship the one without any kind of buffs
-            case 0:
-
-                break;
-
-            default:
-
-                break;
-        }
+         for (int i = 0; i < 2; i++)
+         {
+			TrashMan.spawn(typeAttack, muzzleShoot[i].transform.position, muzzleShoot[i].transform.rotation);
+         }
     }
 
-    /*----------------------------------------Attack function---------------------------------------------
-     * typeAttack will be explained if any especial projectiles are being used in future
-     * 1 - Normal projectile
-     */
-
-    void Attack(string typeAttack, int numProjectiles)
-    {
-
-
-            for (int i = 0; i < 2; i++)
-            {
-                    TrashMan.spawn(typeAttack, muzzleShoot[i].transform.position, muzzleShoot[i].transform.rotation);
-            }
-     
-
-    }
-
-    void Update()
+    public virtual void Update()
     {
         enemy = GameObject.FindWithTag("Enemy");
         managerObject = GameObject.FindGameObjectWithTag("SceneManager");
         managerGetVariables = managerObject.GetComponent<ManagerScene>();
 		move = false;
 
-		//switch who'll choose which type of attack will be used based on the number of the spaceship
+		
 		try
         {
             target = enemy.GetComponent<LivingEntity>();
         }
         catch(NullReferenceException)
         {
-            Debug.Log("erro de viado");
+            Debug.Log("Inimigo Não encontrado!");
         }
 
         timeBetweenAttacks += 1 * Time.deltaTime;
 
-        AttackOrBuffsBasedOnTypeOfSpaceship();
 
 
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
@@ -310,7 +316,6 @@ public class Player : MonoBehaviour
 				changeColorShield(actualColor);
 				canChangeColor = false;
 			}
-				
 
 		}
 
@@ -324,7 +329,6 @@ public class Player : MonoBehaviour
 			
 			if (timeBetweenAttacks > 0.09f)
 			{
-				
 				Attack("Projectile_Player", numberProjectiles);
 				count = 0;
 				timeBetweenAttacks = 0;
@@ -336,13 +340,6 @@ public class Player : MonoBehaviour
 
 			if (move == false)
 				move = true;
-			
-           
-			//transform.position = playerPos;
-			//Debug.Log(actualColor);
-
-			
-			
         }
 		if (move == true)
 			transform.position = Vector3.MoveTowards(transform.position, targetMove, speed * Time.deltaTime);
@@ -391,7 +388,11 @@ public class Player : MonoBehaviour
 					//transform.position = Vector3.MoveTowards(transform.position, targetMove, speed* Time.deltaTime);
         }
 #endif
-
+		if(isInvulnerable == true)
+		{
+			changeColorPlayer(2);
+			changeColorShield(2);
+		}
 	}
 }
 
