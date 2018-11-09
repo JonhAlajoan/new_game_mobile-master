@@ -43,6 +43,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 	private float lastClickTime = -10f;
 	public float speed;
 	float timeOfInvulnerability;
+	float deathCount;
 
 	bool dead;
 	bool move;
@@ -87,11 +88,9 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
 		colliderPlayer = GetComponent<CapsuleCollider2D>();
 
-        if (spaceshipUsed == 7)
-        {
-            health -= 1;
-        }
+
     }
+
 
     #region Color Control Functions
     public void changeColorPlayer(int color)
@@ -167,16 +166,13 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 		changeColorShield(1);
 		isInvulnerable = false;
 
+		yield return new WaitForSeconds(1f);
+
 		colliderPlayer.enabled = true;
 	}
 
     public void takeDamage(int damage)
     {
-        if (spaceshipUsed == 2)
-        {
-            damage += 1;
-        }
-
         health -= damage;
 
         if (health == 2)
@@ -195,7 +191,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
 		if (health <= 0 && !dead)
         {
-            Die();
+			dead = true;
         }
 
     }
@@ -243,7 +239,8 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
             OnDeath();
         }
 
-        GameObject canvasGameOver = managerGetVariables.canvasGameOver;
+
+		GameObject canvasGameOver = managerGetVariables.canvasGameOver;
 
         canvasGameOver.SetActive(true);
 
@@ -252,6 +249,8 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
         ManagerScene manageSceneVariableChanger = sceneManager.GetComponent<ManagerScene>();
 
         manageSceneVariableChanger.isPlayerAlive = false;
+
+		
 
         TrashMan.despawn(gameObject);
         dead = false;
@@ -341,7 +340,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 			if (move == false)
 				move = true;
         }
-		if (move == true)
+		if (move == true && !dead)
 			transform.position = Vector3.MoveTowards(transform.position, targetMove, speed * Time.deltaTime);
 	
 
@@ -392,6 +391,14 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 		{
 			changeColorPlayer(2);
 			changeColorShield(2);
+		}
+
+		if(dead == true)
+		{
+			deathCount += 1 * Time.deltaTime;
+			TrashMan.spawn("VFX_DEATH_PLAYER", transform.position, transform.rotation);
+			if (deathCount > 1.5f)
+				Die();
 		}
 	}
 }
