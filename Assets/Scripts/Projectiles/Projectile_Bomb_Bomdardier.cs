@@ -12,7 +12,7 @@ public class Projectile_Bomb_Bomdardier : MonoBehaviour {
 
     private void Start()
     {
-        speed = 4f;
+        speed = 8f;
         lifetime = 1 * Time.deltaTime;
         randomDir = Random.Range(0, 2);
     }
@@ -48,7 +48,7 @@ public class Projectile_Bomb_Bomdardier : MonoBehaviour {
             TrashMan.spawn("Explosion_Bombardier", gameObject.transform.position, gameObject.transform.rotation);
             
             lifetime = 0;
-            speed = 4f;
+            speed = 8f;
             TrashMan.despawn(gameObject);
         }
 	}

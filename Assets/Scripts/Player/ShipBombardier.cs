@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipDefault : Player {
+public class ShipBombardier : Player {
 
-	
-	public override void Start ()
+	public override void Start()
 	{
 		base.Start();
-		base.SetStartingAttributes(100, 3, 2f, 0.09f);
+		base.SetStartingAttributes(50, 3, 2, 1f);
 	}
 
 	public override void Attack(string typeAttack, int numProjectiles)
 	{
-		base.Attack(typeAttack, 2);
+
+		base.Attack("Bomb_Bombardier", 1);
 	}
-
-
 }

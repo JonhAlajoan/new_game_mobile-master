@@ -26,10 +26,11 @@ public class LivingEntity : MonoBehaviour {
     bool resetTheMSBetweenAttacks;
 
 
-    protected virtual void Start()
+
+	protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("green");
-
+		
         try
         {
             target = player.GetComponent<Player>();
@@ -58,8 +59,9 @@ public class LivingEntity : MonoBehaviour {
         auxHealth = health;   
         //spawnControlAux = spawnControl.GetComponent<Spawner> ().enemiesRemainingAlive;
     }
-
-    public void SetMsBetweenAttacks(float msBetweenAttack)
+	
+	
+	public void SetMsBetweenAttacks(float msBetweenAttack)
     {
         msBetweenShots = msBetweenAttack;
     }
@@ -93,12 +95,22 @@ public class LivingEntity : MonoBehaviour {
     IEnumerator destruction()
     {
         canShoot = false;
+		CapsuleCollider2D colliderPlayer = target.GetComponent<CapsuleCollider2D>();
+
+		colliderPlayer.enabled = false;
 		
 		Camera.main.GetComponent<CameraShake>().Shake(1f, 3f, 3f);
 
 		
+		
+		yield return new WaitForSeconds(6f);
+		
+		colliderPlayer.enabled = true;
+
 		yield return new WaitForSeconds(10f);
-        enemyManager.updateEnemy();
+
+		
+		enemyManager.updateEnemy();
         enemyManager.needToSpawnEnemy = true;
         dead = false;
         health = startingHealth;

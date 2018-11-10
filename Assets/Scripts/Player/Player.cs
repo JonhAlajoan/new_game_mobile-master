@@ -33,12 +33,12 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
    
     public int numberProjectiles;
     public int spaceshipUsed;
-    public int delayBetweenAttack;
 	public int health;
 	int actualColor;
 
 	public float count;
     public float timeBetweenAttacks;
+	public float delayBetweenAttack;
 	private float doubleClickTime = 0.5f;
 	private float lastClickTime = -10f;
 	public float speed;
@@ -56,11 +56,12 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
 	#endregion
 
-	public void SetStartingAttributes(float _speed, int _health, float _timeOfInvul)
+	public void SetStartingAttributes(float _speed, int _health, float _timeOfInvul, float _delayBetweenAttacks)
 	{
 		speed = _speed;
 		health = _health;
 		timeOfInvulnerability = _timeOfInvul;
+		delayBetweenAttack = _delayBetweenAttacks;
 	}
 
 	public virtual void Start()
@@ -262,7 +263,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
     public virtual void Attack(string typeAttack, int numProjectiles)
     {
-         for (int i = 0; i < 2; i++)
+         for (int i = 0; i < numProjectiles; i++)
          {
 			TrashMan.spawn(typeAttack, muzzleShoot[i].transform.position, muzzleShoot[i].transform.rotation);
          }
@@ -326,7 +327,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 		if (Input.GetMouseButton(0))
         {
 			
-			if (timeBetweenAttacks > 0.09f)
+			if (timeBetweenAttacks >  delayBetweenAttack)
 			{
 				Attack("Projectile_Player", numberProjectiles);
 				count = 0;
