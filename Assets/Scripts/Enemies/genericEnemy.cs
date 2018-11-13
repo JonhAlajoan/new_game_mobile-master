@@ -82,8 +82,12 @@ public class genericEnemy : LivingEntity
                     {
                         Attack(0);
                     }
+					if (randomBullet == 2)
+					{
+						Attack(1);
+					}
 
-                }
+				}
             }
            
         }
