@@ -147,7 +147,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
 		if(color == 2)
 		{
-			mainShield.startColor = Color.Lerp(new Color(0.67059f, 0f, 1f), new Color(1f, 1f, 0f), Mathf.Sin(Time.time * 40));
+			mainShield.startColor = Color.Lerp(new Color(0.67059f, 0f, 1f), new Color(1f, 1f, 0f), Mathf.Sin(Time.time * 400));
 			actualColor = 0;
 		}
     }

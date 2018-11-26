@@ -14,9 +14,9 @@ using UnityEngine.SceneManagement;
  */
 public class ShopController : MonoBehaviour {
 
-    #region attributes
+	#region attributes
 
-    /*Attributes:
+	/*Attributes:
      * Maincam = Main camera, used to lerp between ships and tilt to left while seeing the details
      * shipPositions = Array that stores each Transform of the ships on the Shop(0 - default, 1 - kaze, 2 - Berserk, 3 - Frozen, 4 - hira, 5 - doublegold, 6 - bombardier)
      * initialTarget = The initial target of the shop (The default ship)
@@ -29,20 +29,29 @@ public class ShopController : MonoBehaviour {
      * CanvasPopUpBuyConfirmation = Canvas that show the price and confirms if you want to buy the ship
      * isSpaceshipOwned = List of ships that are owned by the player. The ships are identified using the index.
      * buff and debuffDeatails = Buffs or debuffs that are shown  in the details page
-     * scoreShop = variable that represents the amount of gold that the player does have right now and the variable that is saved in persistent datapath
+     * currency = variable that represents the amount of gold that the player does have right now and the variable that is saved in persistent datapath
      * startOnLoad = Defines if the data should be loaded when the script is initialized
      * numProjectilesToBeUpgradedOnShop = variable that stores the amount of projectiles that a player does have after the upgrade and its valued is save on persistent data;
      * sapaceShipToBeUsedOnStart = variable that stores spaceship that'll be used when start game is pressed;
      * delayBetweenAttacksToBeUpgraded = Variable that stores the delay between attacks that a player upgraded and its value is saved on persistent datapath;
      * 
      */
-    Transform mainCam;
-    public Transform[] shipPositions;
+	#region cam and ship positions
+	[Header("Cameras and ship positions")]
+	
+	Transform mainCam;
+	[Tooltip("Array 'shipPositions' gets all the positions of the ships as transform, so the mainCam can Lerp between the initial and nextTargets")]
+		public Transform[] shipPositions;
     Transform initialTarget;
-    Transform nextTarget;    
+    Transform nextTarget;   
+	
+	[Space(10)]
+	#endregion
 
-    public Text nameOfShipStart;
-    public Text nameOfShipDetails;
+
+	#region Canvas Attributes
+	[Header("Canvas")]
+	[Tooltip("All Canvas used on the shop")]
 
     public GameObject canvasShop;
     public GameObject canvasDetails;
@@ -61,12 +70,29 @@ public class ShopController : MonoBehaviour {
     public GameObject canvasWatchADWarnShipShop;
     public GameObject canvasNotConnectedToInternet;
 
-    public Text buffDetails;
-    public Text debuffDetails;
+	[Space(10)]
+	#endregion
 
-    public Text initialPoints;
-    public Text initialPointDetails;
-    public Text initialPointsUpgrade;
+	#region Text Related
+	[Header("Name/details/buff/debuff")]
+	[Tooltip("Name of the ship that is shown at first on the shop")]
+		public Text nameOfShipStart;
+	[Tooltip("Name of the ship that is shown at first on the shop")]
+		public Text nameOfShipDetails;
+	[Tooltip("Buff Text Being Shown")]
+		public Text buffDetails;
+	[Tooltip("Debuff Text being Shown")]
+		public Text debuffDetails;
+	[Space(10)]
+
+	[Header("Currency related")]
+	[Tooltip("Coins to buy Upgrades")]
+		public Text currentCurrency;
+	[Tooltip("Name of the ship that is shown at first on the shop")]
+		public Text currentCurrencyDetails;
+	[Tooltip("Name of the ship that is shown at first on the upgrade part of the shop")]
+		public Text currentCurrencyUpgrade;
+	[Space(10)]
 
     public Text priceOfItens;
     public Text textPriceOfUpgradeProjectile;
@@ -74,10 +100,11 @@ public class ShopController : MonoBehaviour {
 
     public Text numOfProjectilesText;
     public Text numOfDelayBetweenAttacksText;
+	#endregion
 
-    public Button buttonStartGame;
+	public Button buttonStartGame;
 
-    public int scoreShop;
+    public int currency;
 
     bool startOnLoad = true;
     bool firstTimePlaying;
@@ -408,13 +435,13 @@ public class ShopController : MonoBehaviour {
             canvasPopUPBuy.SetActive(false);
         }
 
-        if (scoreShop >= priceOfShip && !isShipOw)
+        if (currency >= priceOfShip && !isShipOw)
         {  
             isSpaceshipOwned.Add(index);
             canvasPopUPBuyConfirmation.SetActive(true);
             canvasPopUPBuy.SetActive(false);
             
-            scoreShop = scoreShop - priceOfShip;
+            currency = currency - priceOfShip;
         }
 
         else  
@@ -434,14 +461,16 @@ public class ShopController : MonoBehaviour {
         }
     }
 
-   /* public void clearSave()
+    public void clearSave()
     {
-        SaveGame.Delete("numProjectiles");
-        SaveGame.Delete("delayBetweenAttacks");
-        SaveGame.Delete("listOfSpaceshipsOwned");
-        numProjectilesToBeUpgradedOnShop = 4;
-        delayBetweenAttacksToBeUpgraded = 2;
-    }*/
+		/* SaveGame.Delete("numProjectiles");
+		 SaveGame.Delete("delayBetweenAttacks");
+		 SaveGame.Delete("listOfSpaceshipsOwned");
+		 numProjectilesToBeUpgradedOnShop = 4;
+		 delayBetweenAttacksToBeUpgraded = 2; */
+
+		currency = 10000;
+    }
 
 /*
 #region Ads
@@ -469,7 +498,7 @@ public class ShopController : MonoBehaviour {
             case ShowResult.Finished:
                 Debug.Log("The ad was successfully shown.");
                 canvasWatchADWarn.SetActive(true);
-                scoreShop += 100;
+                currency += 100;
                 break;
             case ShowResult.Skipped:
                 Debug.Log("The ad was skipped before reaching the end.");
@@ -540,9 +569,9 @@ public class ShopController : MonoBehaviour {
 
     public void buyUpgradeNumProjectiles()
     {
-        if (scoreShop > priceOfUpgradeNumProjectiles)
+        if (currency > priceOfUpgradeNumProjectiles)
         {
-            scoreShop -= priceOfUpgradeNumProjectiles;
+            currency -= priceOfUpgradeNumProjectiles;
             numProjectilesToBeUpgradedOnShop += 2;
             canvasProjectileSuccessfullyBought.SetActive(true);
             canvasUpgradeBuyPopUpProjectile.SetActive(false);
@@ -590,9 +619,9 @@ public class ShopController : MonoBehaviour {
 
     public void buyUpgradDelay()
     {
-        if (scoreShop > priceOfUpgradeDelay)
+        if (currency > priceOfUpgradeDelay)
         {
-            scoreShop -= priceOfUpgradeDelay;
+            currency -= priceOfUpgradeDelay;
             priceOfUpgradeDelay += 1;
             canvasDelaySuccessfullyBought.SetActive(true);
             canvasUpgradeBuyPopUpProjectile.SetActive(false);
@@ -684,9 +713,9 @@ public class ShopController : MonoBehaviour {
     #region saveAndLoad
     public void Load()
     {
-        scoreShop = SaveGame.Load("score", scoreShop);
-        initialPoints.text = scoreShop.ToString();
-        initialPointDetails.text = scoreShop.ToString();
+        currency = SaveGame.Load("score", currency);
+        currentCurrency.text = currency.ToString();
+        currentCurrencyDetails.text = currency.ToString();
 
         numProjectilesToBeUpgradedOnShop = SaveGame.Load("numProjectiles", numProjectilesToBeUpgradedOnShop);
         delayBetweenAttacksToBeUpgraded = SaveGame.Load("delayBetweenAttacks", delayBetweenAttacksToBeUpgraded);
@@ -696,7 +725,7 @@ public class ShopController : MonoBehaviour {
 
     public void Save()
     {
-        SaveGame.Save("score", scoreShop);
+        SaveGame.Save("score", currency);
         SaveGame.Save("numProjectiles", numProjectilesToBeUpgradedOnShop);
         SaveGame.Save("delayBetweenAttacks", delayBetweenAttacksToBeUpgraded);
         SaveGame.Save("typeOfSpaceShipBeingUsed", index);
@@ -723,9 +752,9 @@ public class ShopController : MonoBehaviour {
 
 public void Update()
     {
-        initialPoints.text = scoreShop.ToString() + " EC";
-        initialPointDetails.text = scoreShop.ToString() + " EC";
-        initialPointsUpgrade.text = scoreShop.ToString() + " EC";
+        currentCurrency.text = currency.ToString() + " EC";
+        currentCurrencyDetails.text = currency.ToString() + " EC";
+        currentCurrencyUpgrade.text = currency.ToString() + " EC";
 
         numOfDelayBetweenAttacksText.text = delayBetweenAttacksToBeUpgraded.ToString();
         numOfProjectilesText.text = numProjectilesToBeUpgradedOnShop.ToString();

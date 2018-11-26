@@ -53,6 +53,9 @@ TagManager:
   - name: Player
     uniqueID: 142470105
     locked: 0
+  - name: AbovePlayer
+    uniqueID: 2300279649
+    locked: 0
   - name: Shield
     uniqueID: 4021238971
     locked: 0
