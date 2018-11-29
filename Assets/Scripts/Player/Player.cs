@@ -50,6 +50,9 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 	bool canChangeColor = false;
 	bool isInvulnerable = false;
 
+	public Animator playerAnimator;
+	
+
 	Vector3 targetMove;
 
 	CapsuleCollider2D colliderPlayer;
@@ -89,7 +92,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
 		colliderPlayer = GetComponent<CapsuleCollider2D>();
 
-
+		playerAnimator = GetComponentInChildren<Animator>();
     }
 
 
@@ -263,6 +266,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 
     public virtual void Attack(string typeAttack, int numProjectiles)
     {
+		 playerAnimator.SetBool("isAttacking", true);
          for (int i = 0; i < numProjectiles; i++)
          {
 			TrashMan.spawn(typeAttack, muzzleShoot[i].transform.position, muzzleShoot[i].transform.rotation);
@@ -322,6 +326,7 @@ public abstract class Player : MonoBehaviour, IPlayerBehaviour
 		if(Input.GetMouseButtonUp(0))
 		{
 			canChangeColor = true;
+			playerAnimator.SetBool("isAttacking", false);
 		}
 
 		if (Input.GetMouseButton(0))
